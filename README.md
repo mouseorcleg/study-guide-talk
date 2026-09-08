@@ -3,7 +3,7 @@ Most study advice assumes you learn like everyone else, with time you don't have
 This talk is about using Claude to build a study guide that fits you.
 
 ### What you need to know beforehand
-- your [learning style](https://www.educationplanner.org/students/self-assessments/learning-styles);
+- your [learning style](https://www.learningstylequiz.com);
 - your subject;
 - your constraints.
 
@@ -39,4 +39,9 @@ Update the guide
 ```
 
 Just in case:
+
+P.S.: Take a learning time quiz during coffee break!
+<img width="352" alt="link to https://www.learningstylequiz.com" src="https://github.com/user-attachments/assets/1460d4ce-7d27-40ba-ac8e-f7ad796c907d" />
+
+
 
