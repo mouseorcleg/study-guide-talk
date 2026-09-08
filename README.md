@@ -7,7 +7,7 @@ This talk is about using Claude to build a study guide that fits you.
 - your subject;
 - your constraints.
 
-#### Initial prompt:
+#### Initial prompt in plan mode:
 ```
 // What
 I want to create an interactive study guide for my interview prep. 
@@ -25,7 +25,6 @@ Note that I would not have access to the internet for a few hours of my prep tim
 So if you want to include an article in my study guide, it can’t be a link - you’ll have to download it in a nice format beforehand
 
 Ask clarifying questions before you start. I prefer a clean girl aesthetic in my study guides. 
-/plan
 ```
 
 #### Additional prompt:
