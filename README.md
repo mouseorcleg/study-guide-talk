@@ -38,7 +38,7 @@ And make a test setup so I can get the assets there.
 Update the guide
 ```
 
-The result: [01-Swift-Testing-Study-Guide.html](https://github.com/mouseorcleg/study-guide-talk/blob/2ea13d14ef48b3ad081edce844f9643bb83663bd/01-Swift-Testing-Study-Guide.html)
+The result: [01-Swift-Testing-Study-Guide.html](https://github.com/mouseorcleg/study-guide-talk/blob/2ea13d14ef48b3ad081edce844f9643bb83663bd/01-Swift-Testing-Study-Guide.html)   
 To preview: [https://raw.githack.com](https://rawcdn.githack.com/mouseorcleg/study-guide-talk/2ea13d14ef48b3ad081edce844f9643bb83663bd/01-Swift-Testing-Study-Guide.html)
 
 P.S.: Take a learning style quiz during coffee break!
