@@ -3,7 +3,7 @@ Most study advice assumes you learn like everyone else, with time you don't have
 This talk is about using Claude to build a study guide that fits you.
 
 ### What you need to know beforehand
-- your [learning style](https://www.learningstylequiz.com);
+- your learning style;
 - your subject;
 - your constraints.
 
@@ -41,7 +41,7 @@ Update the guide
 The result: [01-Swift-Testing-Study-Guide.html](https://github.com/mouseorcleg/study-guide-talk/blob/2ea13d14ef48b3ad081edce844f9643bb83663bd/01-Swift-Testing-Study-Guide.html)   
 To preview: [https://raw.githack.com](https://rawcdn.githack.com/mouseorcleg/study-guide-talk/2ea13d14ef48b3ad081edce844f9643bb83663bd/01-Swift-Testing-Study-Guide.html)
 
-P.S.: Take a learning style quiz during coffee break!
+P.S.: Take a [learning style quiz](https://www.learningstylequiz.com) during coffee break!
 
 <img width="352" alt="link to https://www.learningstylequiz.com" src="https://github.com/user-attachments/assets/1460d4ce-7d27-40ba-ac8e-f7ad796c907d" />
 
