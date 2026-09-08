@@ -1,0 +1,1177 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Swift Testing — Interview Study Guide</title>
+<style>
+  :root{
+    --bg:#FAF6F0; --surface:#FFFFFF; --surface-2:#F3ECE2; --line:#E7DDD0;
+    --ink:#463E37; --ink-soft:#8A7F72;
+    --sage:#93A487; --sage-deep:#63755A; --sage-wash:#EAF0E5;
+    --caramel:#C6A079; --good:#6E8C61; --warn:#B67F53;
+    --serif:'Baskerville','Hoefler Text',Georgia,'Times New Roman',serif;
+    --sans:-apple-system,system-ui,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    --mono:'SF Mono',ui-monospace,Menlo,Consolas,monospace;
+    --shadow:0 1px 2px rgba(70,62,55,.05),0 10px 30px rgba(70,62,55,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.6;padding:0 0 env(safe-area-inset-bottom)}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  header.top{padding:34px 0 18px}
+  .kicker{font-size:13px;letter-spacing:.04em;color:var(--sage-deep);margin:0 0 6px}
+  h1{font-family:var(--serif);font-weight:400;font-size:38px;line-height:1.08;margin:0;letter-spacing:-.01em}
+  .sub{color:var(--ink-soft);margin:8px 0 0;max-width:60ch}
+  .headrow{display:flex;gap:22px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+
+  .ring-wrap{display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:12px 16px;box-shadow:var(--shadow)}
+  .ring{position:relative;width:58px;height:58px;flex:none}
+  .ring svg{transform:rotate(-90deg)}
+  .ring .pct{position:absolute;inset:0;display:grid;place-items:center;font-size:14px;font-family:var(--serif)}
+  .ring-meta{font-size:13px;line-height:1.35;color:var(--ink-soft)}
+  .ring-meta b{color:var(--ink);font-weight:600}
+  .btn-reset{margin-top:6px;font-size:12px;color:var(--ink-soft);background:none;border:none;padding:0;text-decoration:underline;cursor:pointer}
+
+  nav.tabs{position:sticky;top:0;z-index:20;background:linear-gradient(var(--bg),var(--bg) 70%,rgba(250,246,240,0));padding:12px 0 8px;margin-top:10px}
+  .tabrow{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  .tabrow::-webkit-scrollbar{display:none}
+  .tab{flex:none;font-size:15px;color:var(--ink-soft);background:var(--surface);border:1px solid var(--line);padding:9px 16px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:background .15s,color .15s,border-color .15s}
+  .tab[aria-selected="true"]{background:var(--sage-deep);color:#fff;border-color:var(--sage-deep)}
+  .tab .n{opacity:.6;font-size:12px;margin-left:6px}
+  .tab[aria-selected="true"] .n{opacity:.85}
+
+  main{padding:8px 0 90px}
+  section.view{display:none}
+  section.view.active{display:block}
+  .lede{font-family:var(--serif);font-size:22px;line-height:1.4;margin:14px 0 4px;font-weight:400}
+  h2{font-family:var(--serif);font-weight:400;font-size:27px;margin:26px 0 4px;letter-spacing:-.01em}
+  h3{font-family:var(--serif);font-weight:400;font-size:20px;margin:22px 0 6px}
+  p{margin:10px 0}
+  .muted{color:var(--ink-soft)}
+  a{color:var(--sage-deep)}
+
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px 22px;margin:16px 0;box-shadow:var(--shadow)}
+  .soft{background:var(--surface-2);border-color:#E4D9C9}
+  .quiet{box-shadow:none}
+
+  details.topic{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);margin:14px 0;box-shadow:var(--shadow);overflow:hidden}
+  details.topic>summary{list-style:none;cursor:pointer;padding:16px 20px;display:flex;align-items:center;gap:12px;font-family:var(--serif);font-size:20px}
+  details.topic>summary::-webkit-details-marker{display:none}
+  .chev{width:9px;height:9px;border-right:2px solid var(--sage-deep);border-bottom:2px solid var(--sage-deep);transform:rotate(-45deg);transition:transform .2s;flex:none}
+  details[open]>summary .chev{transform:rotate(45deg)}
+  .topic-body{padding:2px 20px 18px}
+  summary .xtag{margin-left:auto;font-size:12px;color:var(--sage-deep);background:var(--sage-wash);border:1px solid #D5E0CA;padding:3px 9px;border-radius:999px;white-space:nowrap}
+
+  .done{display:inline-flex;align-items:center;gap:9px;font-size:14px;color:var(--ink-soft);cursor:pointer;user-select:none;margin-top:12px}
+  .done input{position:absolute;opacity:0;width:0;height:0}
+  .box{width:20px;height:20px;border:1.5px solid var(--sage);border-radius:6px;display:grid;place-items:center;transition:background .15s}
+  .box::after{content:"";width:9px;height:5px;border-left:2px solid #fff;border-bottom:2px solid #fff;transform:rotate(-45deg) scale(0);transition:transform .15s}
+  .done input:checked + .box{background:var(--sage-deep);border-color:var(--sage-deep)}
+  .done input:checked + .box::after{transform:rotate(-45deg) scale(1)}
+  .done input:checked ~ .lbl{color:var(--sage-deep)}
+  .done input:focus-visible + .box{outline:2px solid var(--sage-deep);outline-offset:2px}
+
+  pre{margin:12px 0;background:#F7F1E8;border:1px solid #E7DCC9;border-radius:12px;overflow:auto;position:relative}
+  pre code{display:block;font-family:var(--mono);font-size:13.5px;line-height:1.65;color:#4A423B;padding:16px 16px 15px;white-space:pre;-webkit-overflow-scrolling:touch}
+  .cptop{position:sticky;top:0;float:right}
+  .copy{font-family:var(--sans);font-size:12px;color:#fff;background:var(--sage-deep);border:1px solid var(--sage-deep);border-radius:8px;padding:6px 12px;margin:8px 8px 0 0;cursor:pointer}
+  .copy.ok{background:var(--good);border-color:var(--good)}
+  code.inl{font-family:var(--mono);font-size:.86em;background:var(--surface-2);border:1px solid #E4D9C9;padding:1px 6px;border-radius:6px}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:14.5px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{font-weight:600;color:var(--sage-deep);font-size:13px}
+  td code{font-family:var(--mono);font-size:12.5px}
+  tbody tr:last-child td{border-bottom:none}
+
+  .say{border-left:3px solid var(--caramel);background:#FBF4EA;border-radius:0 10px 10px 0;padding:12px 16px;margin:14px 0}
+  .say .h{font-size:12.5px;letter-spacing:.03em;color:var(--warn);margin:0 0 4px}
+  .say p{margin:4px 0}
+  .say i{color:var(--ink);font-style:italic;font-family:var(--serif);font-size:17px}
+
+  ul.tick{list-style:none;padding-left:0;margin:10px 0}
+  ul.tick li{position:relative;padding-left:24px;margin:7px 0}
+  ul.tick li::before{content:"";position:absolute;left:2px;top:9px;width:7px;height:7px;border-radius:50%;background:var(--sage)}
+  ul.plain{padding-left:20px}
+  ul.plain li{margin:6px 0}
+
+  .day{display:flex;gap:16px;margin:14px 0}
+  .day .num{font-family:var(--serif);font-size:30px;color:var(--caramel);line-height:1;flex:none;width:40px}
+  .day .body{flex:1}
+  .day h3{margin:2px 0 4px}
+
+  .fc-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:6px}
+  .fc-count{font-size:14px;color:var(--ink-soft)}
+  .fc-count b{color:var(--sage-deep)}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);min-height:220px;display:flex;flex-direction:column;justify-content:center;padding:30px 26px;text-align:center;cursor:pointer;position:relative}
+  .card .side{font-size:13px;color:var(--ink-soft);position:absolute;top:14px;left:18px}
+  .card .q{font-family:var(--serif);font-size:24px;line-height:1.35}
+  .card .a{font-size:16.5px;line-height:1.55;text-align:left}
+  .card .hint{margin-top:14px;font-size:13px;color:var(--ink-soft)}
+  .fc-actions{display:flex;gap:10px;margin:14px 0 4px}
+  .fc-actions button{flex:1;font-size:15px;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);cursor:pointer}
+  .fc-actions .review{color:var(--warn)}
+  .fc-actions .known{color:var(--sage-deep)}
+  .fc-nav{display:flex;align-items:center;justify-content:space-between;margin-top:8px;font-size:14px;color:var(--ink-soft)}
+  .fc-nav button{font-size:14px;background:none;border:none;color:var(--sage-deep);cursor:pointer;padding:6px}
+
+  .q-block{margin:16px 0}
+  .q-block .qq{font-family:var(--serif);font-size:19px;margin-bottom:8px}
+  .opt{display:block;width:100%;text-align:left;font-size:15.5px;padding:12px 14px;margin:7px 0;border:1px solid var(--line);border-radius:12px;background:var(--surface);cursor:pointer}
+  .opt.correct{border-color:var(--good);background:var(--sage-wash)}
+  .opt.wrong{border-color:#DDB6A0;background:#FBEDE4}
+  .explain{font-size:14.5px;color:var(--ink-soft);margin:6px 2px 0;display:none}
+  .explain.show{display:block}
+
+  footer{color:var(--ink-soft);font-size:13px;text-align:center;padding:30px 0 40px}
+  hr.soft{border:none;border-top:1px solid var(--line);margin:22px 0}
+
+  @media (max-width:560px){ body{font-size:16px} h1{font-size:31px} .headrow{gap:14px} }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="headrow">
+      <div>
+        <p class="kicker">Rightmove · iOS technical prep</p>
+        <h1>Swift Testing</h1>
+        <p class="sub">A refresher and a set of hands-on drills for the paired coding session — framework mechanics, the clean-code theory they'll ask you to name, and drills you paste straight into Playgrounds.</p>
+      </div>
+      <div class="ring-wrap">
+        <div class="ring">
+          <svg width="58" height="58" viewBox="0 0 58 58">
+            <circle cx="29" cy="29" r="25" fill="none" stroke="#E7DDD0" stroke-width="6"/>
+            <circle id="ringFill" cx="29" cy="29" r="25" fill="none" stroke="#63755A" stroke-width="6" stroke-linecap="round" stroke-dasharray="157" stroke-dashoffset="157"/>
+          </svg>
+          <div class="pct"><span id="ringPct">0%</span></div>
+        </div>
+        <div class="ring-meta">
+          <b id="ringDone">0</b> of <b id="ringTotal">0</b> covered<br>
+          <span id="fcMastery">0 cards mastered</span>
+          <br><button class="btn-reset" id="resetBtn">Reset progress</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <div class="tabrow" role="tablist" id="tabrow">
+      <button class="tab" role="tab" data-view="start" aria-selected="true">Start</button>
+      <button class="tab" role="tab" data-view="framework">Framework<span class="n" id="nFramework"></span></button>
+      <button class="tab" role="tab" data-view="theory">Theory<span class="n" id="nTheory"></span></button>
+      <button class="tab" role="tab" data-view="drills">Drills<span class="n" id="nDrills"></span></button>
+      <button class="tab" role="tab" data-view="recall">Recall</button>
+      <button class="tab" role="tab" data-view="final">Final 30</button>
+    </div>
+  </nav>
+
+  <main>
+
+  <!-- ============ START ============ -->
+  <section class="view active" id="view-start">
+    <p class="lede">Two days, then a half-hour warm-up. Here's the shape of it.</p>
+
+    <div class="panel soft quiet">
+      <div class="day">
+        <div class="num">1</div>
+        <div class="body">
+          <h3>Get fluent in the framework</h3>
+          <p class="muted" style="margin-top:2px">Work through <b>Framework</b> and <b>Theory</b>. You know XCTest cold, so most of this is a translation job — each topic shows the XCTest line you'd write and its Swift Testing equivalent. Tick topics off as you go.</p>
+        </div>
+      </div>
+      <div class="day">
+        <div class="num">2</div>
+        <div class="body">
+          <h3>Write tests by hand</h3>
+          <p class="muted" style="margin-top:2px">Spend most of day two in <b>Drills</b>. Each one is a full Playground file — copy, paste, write your tests, run. Finish with a pass through <b>Recall</b>.</p>
+        </div>
+      </div>
+      <div class="day">
+        <div class="num">½</div>
+        <div class="body">
+          <h3>Right before the call</h3>
+          <p class="muted" style="margin-top:2px">Open <b>Final 30</b> — a one-screen cheat sheet, a rapid quiz, and a few lines to say out loud if your mind goes blank.</p>
+        </div>
+      </div>
+    </div>
+
+    <h2>How the drills work</h2>
+    <p>Every drill in the <b>Drills</b> tab is a <b>complete Playground file</b>. Tap <b>Copy</b>, paste into a new blank Playground, and it's all there — the task as a comment, the type to test, the assert helpers, a space to write your tests, and a reference solution commented at the bottom. No switching back to this guide mid-drill.</p>
+    <ul class="tick">
+      <li><b>It runs.</b> <code class="inl">@Test</code> functions don't execute in the Playgrounds app, so you write your checks with the built-in <code class="inl">check(...)</code> / <code class="inl">checkThrows(...)</code> helpers and call your test function to see ✅/❌ printed.</li>
+      <li><b>It doubles as recall.</b> Each file's reference block also shows the real <code class="inl">@Test</code> / <code class="inl">#expect</code> syntax — the thing you'd actually type in Xcode.</li>
+      <li><b>Reveal when ready.</b> The reference lives in a <code class="inl">/* … */</code> comment at the foot of the file. Attempt first, then uncomment to compare.</li>
+    </ul>
+
+    <div class="say">
+      <p class="h">Set the tone in the first minute</p>
+      <p>Ron's note was blunt: candidates lose points by diving in. Before the first line of code — <i>"Let me make sure I've got the requirements. What's the expected behaviour for an empty input? Should this throw or return a default?"</i> Then narrate as you go. The framework is the easy part; the collaboration is what they're scoring.</p>
+    </div>
+  </section>
+
+  <!-- ============ FRAMEWORK ============ -->
+  <section class="view" id="view-framework">
+    <p class="lede">Everything you do in XCTest has a shorter equivalent here. Learn the mapping and you already know the framework.</p>
+
+    <details class="topic track" data-id="fw-anatomy">
+      <summary><span class="chev"></span>Anatomy of a test<span class="xtag">from setUp/test…</span></summary>
+      <div class="topic-body">
+        <p>No <code class="inl">XCTestCase</code> subclass, no <code class="inl">test</code> prefix. A free function with <code class="inl">@Test</code> is a test. Import the <code class="inl">Testing</code> module and use <code class="inl">#expect</code> for assertions.</p>
+        <script type="text/plain" class="src">import Testing
+
+@Test func addsTwoNumbers() {
+    let result = 2 + 3
+    #expect(result == 5)
+}
+
+// A readable display name — shows in the results, not the code
+@Test("Casting a Double truncates toward zero")
+func truncates() {
+    #expect(Int(4.7) == 4)
+}</script>
+        <p><code class="inl">#expect</code> takes any boolean expression and, on failure, prints both sides for you — no family of <code class="inl">XCTAssertEqual</code> / <code class="inl">XCTAssertGreaterThan</code> variants to remember. You write the plain comparison.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-expect-require">
+      <summary><span class="chev"></span>#expect vs. try #require<span class="xtag">soft vs. hard</span></summary>
+      <div class="topic-body">
+        <p>This is the distinction they'll want you to articulate.</p>
+        <ul class="tick">
+          <li><b><code class="inl">#expect</code></b> is a <i>soft</i> check. It records a failure and the test keeps running — good for asserting several independent things.</li>
+          <li><b><code class="inl">try #require</code></b> is a <i>hard</i> check. On failure it throws, stopping the test immediately. Use it when continuing makes no sense — above all, to unwrap an optional (it replaces <code class="inl">XCTUnwrap</code>).</li>
+        </ul>
+        <script type="text/plain" class="src">@Test func profileHasName() throws {
+    let user = try loadUser()
+
+    // Stop now if this is nil — nothing below would be meaningful
+    let name = try #require(user.name)
+
+    // Soft checks: both run even if the first fails
+    #expect(name.hasPrefix("M"))
+    #expect(name.count > 1)
+}</script>
+        <div class="say">
+          <p class="h">Say it like this</p>
+          <p><i>"I'll <code class="inl">require</code> the unwrap because every assertion after it depends on a non-nil value — no point flooding the report with cascading failures. The independent checks stay as <code class="inl">expect</code> so one failure doesn't hide the others."</i></p>
+        </div>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-suites">
+      <summary><span class="chev"></span>Suites & lifecycle<span class="xtag">setUp / tearDown</span></summary>
+      <div class="topic-body">
+        <p>A <code class="inl">@Suite</code> groups tests. The trick that catches XCTest people: <b>a fresh instance of the suite is created for every test it holds</b>, so stored properties can't leak between tests. That isolation is built in — no resetting state in <code class="inl">setUp</code>.</p>
+        <script type="text/plain" class="src">@Suite("Shopping cart")
+struct CartTests {
+    let cart: Cart
+
+    init() {                    // runs before EACH test — this is setUp
+        cart = Cart()
+    }
+
+    @Test func startsEmpty() {
+        #expect(cart.items.isEmpty)
+    }
+
+    @Test func addingRaisesCount() {
+        cart.add(.init(name: "Risotto kit", price: 6))
+        #expect(cart.items.count == 1)   // unaffected by the test above
+    }
+}</script>
+        <p>Setup goes in <code class="inl">init()</code> (use <code class="inl">init() async throws</code> if it needs to await or can fail). For teardown, most tests don't need one because each instance is thrown away. When you genuinely must clean up, make the suite a <code class="inl">final class</code> and use <code class="inl">deinit</code>:</p>
+        <script type="text/plain" class="src">@Suite final class TempFileTests {
+    let url: URL
+    init() throws { url = try makeTempFile() }
+    deinit { try? FileManager.default.removeItem(at: url) }  // tearDown
+}</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-throwing">
+      <summary><span class="chev"></span>Testing errors<span class="xtag">XCTAssertThrowsError</span></summary>
+      <div class="topic-body">
+        <p>Pass the error type or a specific value to <code class="inl">#expect(throws:)</code>. To assert something <i>doesn't</i> throw, use <code class="inl">Never.self</code>.</p>
+        <script type="text/plain" class="src">@Test func rejectsEmptyInput() {
+    #expect(throws: ValidationError.self) {
+        try validate("")
+    }
+}
+
+@Test func throwsTheExactCase() {
+    #expect(throws: ValidationError.tooShort) {
+        try validate("ab")
+    }
+}
+
+@Test func acceptsValidInput() {
+    #expect(throws: Never.self) {
+        try validate("hunter2!")
+    }
+}</script>
+        <p class="muted">Want to inspect the thrown error? Capture it with the trailing-closure form and assert on what you catch.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-async">
+      <summary><span class="chev"></span>Async & callbacks<span class="xtag">XCTestExpectation</span></summary>
+      <div class="topic-body">
+        <p>Async is first-class: mark the test <code class="inl">async</code> and just <code class="inl">await</code>. No expectations, no <code class="inl">wait(for:timeout:)</code>.</p>
+        <script type="text/plain" class="src">@Test func loadsUserById() async throws {
+    let user = try await service.loadUser(id: 1)
+    #expect(user.id == 1)
+}</script>
+        <p>For the old "did this callback fire?" pattern, use <code class="inl">confirmation</code>. It fails if the block isn't called the expected number of times.</p>
+        <script type="text/plain" class="src">@Test func firesOnComplete() async {
+    await confirmation("onComplete called once") { fulfil in
+        let worker = Worker()
+        worker.onComplete = { fulfil() }
+        worker.run()
+    }
+}
+
+// Expect an exact count:
+@Test func emitsThreeEvents() async {
+    await confirmation(expectedCount: 3) { got in
+        stream.onEvent = { _ in got() }
+        stream.replay()
+    }
+}</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-params">
+      <summary><span class="chev"></span>Parameterized tests<span class="xtag">no XCTest equivalent</span></summary>
+      <div class="topic-body">
+        <p>One of the real upgrades — run the same test over many inputs, each reported separately. Pass a collection to <code class="inl">arguments:</code>.</p>
+        <script type="text/plain" class="src">@Test(arguments: [2, 4, 6, 100, 0])
+func isEven(_ n: Int) {
+    #expect(n % 2 == 0)
+}
+
+// Pair each input with its expected output using zip
+@Test(arguments: zip([1, 2, 5], [1, 4, 25]))
+func squares(_ input: Int, _ expected: Int) {
+    #expect(input * input == expected)
+}</script>
+        <p class="muted">Two separate collections (<code class="inl">arguments: a, b</code>) run <i>every combination</i> — the cross product. Use <code class="inl">zip</code> when you want matched pairs. Handy interview distinction.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-traits">
+      <summary><span class="chev"></span>Traits & tags<span class="xtag">XCTSkip / test plans</span></summary>
+      <div class="topic-body">
+        <p>Traits are arguments on <code class="inl">@Test</code> / <code class="inl">@Suite</code> that control behaviour.</p>
+        <script type="text/plain" class="src">extension Tag {
+    @Tag static var fast: Self
+}
+
+@Test(.tags(.fast))
+func quick() { #expect(true) }
+
+@Test(.disabled("flaky — see FIXME"))
+func skipForNow() { }
+
+@Test(.enabled(if: FeatureFlags.newCheckout))   // conditional run
+func onlyWhenFlagOn() { }
+
+@Test(.timeLimit(.minutes(1)))                  // fail if it hangs
+func mustFinishQuickly() async { }
+
+@Suite(.serialized)                             // run this suite in order
+struct MigrationSteps { }</script>
+        <p class="muted">Record a one-off failure with <code class="inl">Issue.record("message")</code> (that's your <code class="inl">XCTFail</code>). Wrap an expected-failing block in <code class="inl">withKnownIssue { … }</code> so a known bug doesn't turn the suite red.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="fw-map">
+      <summary><span class="chev"></span>The XCTest → Swift Testing map<span class="xtag">print this in your head</span></summary>
+      <div class="topic-body">
+        <table>
+          <thead><tr><th>XCTest</th><th>Swift Testing</th></tr></thead>
+          <tbody>
+            <tr><td><code>class T: XCTestCase</code></td><td><code>@Suite struct T</code></td></tr>
+            <tr><td><code>func testFoo()</code></td><td><code>@Test func foo()</code></td></tr>
+            <tr><td><code>XCTAssert(x)</code> / <code>XCTAssertTrue(x)</code></td><td><code>#expect(x)</code></td></tr>
+            <tr><td><code>XCTAssertEqual(a, b)</code></td><td><code>#expect(a == b)</code></td></tr>
+            <tr><td><code>XCTAssertNil(x)</code></td><td><code>#expect(x == nil)</code></td></tr>
+            <tr><td><code>XCTUnwrap(x)</code></td><td><code>try #require(x)</code></td></tr>
+            <tr><td><code>XCTAssertThrowsError(try f())</code></td><td><code>#expect(throws: Error.self) { try f() }</code></td></tr>
+            <tr><td><code>XCTAssertNoThrow(try f())</code></td><td><code>#expect(throws: Never.self) { try f() }</code></td></tr>
+            <tr><td><code>XCTFail("m")</code></td><td><code>Issue.record("m")</code></td></tr>
+            <tr><td><code>setUp()</code> / <code>setUpWithError()</code></td><td><code>init()</code> / <code>init() throws</code></td></tr>
+            <tr><td><code>tearDown()</code></td><td><code>deinit</code> (class) or per-test instance</td></tr>
+            <tr><td><code>expectation</code> + <code>wait(for:)</code></td><td><code>await confirmation { }</code> / async-await</td></tr>
+            <tr><td><code>XCTSkip</code> / <code>XCTSkipIf</code></td><td><code>.enabled(if:)</code> / <code>.disabled</code> traits</td></tr>
+          </tbody>
+        </table>
+        <p class="muted">Honest gap to name if asked: there's no direct replacement for <code class="inl">measure { }</code> performance tests yet — you'd still reach for XCTest or another tool for that.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ THEORY ============ -->
+  <section class="view" id="view-theory">
+    <p class="lede">They assess "clean code principles (DRY, KISS…)" by name. Know the definitions and, more importantly, the trade-offs.</p>
+
+    <details class="topic track" data-id="th-structure">
+      <summary><span class="chev"></span>How a test is structured</summary>
+      <div class="topic-body">
+        <p><b>Arrange · Act · Assert</b> (a.k.a. <b>Given · When · Then</b>). Set up the world, do the one thing, check the outcome. Keep the "Act" a single action so a failure points at one behaviour.</p>
+        <script type="text/plain" class="src">@Test func withdrawingReducesBalance() {
+    // Arrange
+    let account = Account(balance: 100)
+    // Act
+    account.withdraw(30)
+    // Assert
+    #expect(account.balance == 70)
+}</script>
+        <p><b>Naming.</b> A good name reads as a sentence: <i>method → condition → expected result</i>. e.g. <code class="inl">withdraw_whenBalanceTooLow_throwsInsufficientFunds</code>. The test name should tell you what broke without opening the body.</p>
+        <p><b>Test behaviour, not implementation.</b> Assert on observable outcomes (return values, state, thrown errors), not private internals. Tests coupled to implementation break every refactor and stop being useful.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="th-first">
+      <summary><span class="chev"></span>What makes a good unit test — FIRST</summary>
+      <div class="topic-body">
+        <ul class="tick">
+          <li><b>Fast</b> — milliseconds. Slow tests don't get run.</li>
+          <li><b>Isolated</b> — no dependence on other tests or shared mutable state (Swift Testing's per-test instances help here).</li>
+          <li><b>Repeatable</b> — same result every run, any machine. No reliance on the network, the clock, or random seeds you don't control.</li>
+          <li><b>Self-validating</b> — it passes or fails on its own; no eyeballing console output.</li>
+          <li><b>Timely</b> — written alongside (or before) the code, while the design is still soft.</li>
+        </ul>
+        <p><b>The pyramid.</b> Lots of fast unit tests at the base, fewer integration tests, a thin cap of UI/end-to-end tests. UI tests are slow and brittle, so lean on units for coverage and reserve e2e for critical happy paths.</p>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="th-principles">
+      <summary><span class="chev"></span>DRY, KISS, YAGNI — with the caveats</summary>
+      <div class="topic-body">
+        <p><b>KISS</b> — keep it simple. Reach for the plainest thing that satisfies the requirement; don't add layers a spec didn't ask for.</p>
+        <p><b>DRY</b> — don't repeat <i>knowledge</i>. One rule lives in one place, so a change happens once. The nuance interviewers like: <b>in tests, prefer DAMP over DRY</b> — a little duplication that keeps each test readable in isolation beats a clever shared helper that hides what's being tested.</p>
+        <p><b>YAGNI</b> — you aren't gonna need it. Don't build for an imagined future; it's speculative complexity you'll pay to maintain and probably delete.</p>
+        <div class="say">
+          <p class="h">The move that scores</p>
+          <p>Naming a principle is table stakes. Show judgement about its <i>limits</i>: <i>"I'd extract this, but over-DRYing tests can couple them and hurt readability, so here I'd keep the two cases explicit."</i> That's the senior signal.</p>
+        </div>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="th-solid">
+      <summary><span class="chev"></span>SOLID — the two that unlock testing</summary>
+      <div class="topic-body">
+        <p>You can recite all five, but tie them to testability — that's why they matter here.</p>
+        <ul class="plain">
+          <li><b>S — Single Responsibility.</b> One reason to change → small units → tests are small and focused.</li>
+          <li><b>O — Open/Closed.</b> Extend via new types, not by editing tested code.</li>
+          <li><b>L — Liskov Substitution.</b> A conforming type must be safely usable wherever the protocol is — which is exactly what lets a fake stand in for the real thing.</li>
+          <li><b>I — Interface Segregation.</b> Small protocols → small, cheap fakes.</li>
+          <li><b>D — Dependency Inversion.</b> Depend on protocols, not concretions. <b>This is the one that makes code testable</b> — inject a protocol and you can pass a fake in the test.</li>
+        </ul>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="th-doubles">
+      <summary><span class="chev"></span>Test doubles — know the five</summary>
+      <div class="topic-body">
+        <p>They may hand you a dependency to fake. Use the right word:</p>
+        <ul class="plain">
+          <li><b>Dummy</b> — passed to satisfy a signature, never used.</li>
+          <li><b>Stub</b> — returns canned answers ("when asked, return this user").</li>
+          <li><b>Spy</b> — a stub that also records how it was called, so you can assert on it afterwards.</li>
+          <li><b>Mock</b> — pre-programmed with expectations; it fails the test if the interaction it wanted didn't happen.</li>
+          <li><b>Fake</b> — a real, lightweight working implementation (e.g. an in-memory store standing in for a database).</li>
+        </ul>
+        <script type="text/plain" class="src">protocol UserLoading {
+    func loadUser(id: Int) async throws -> User
+}
+
+// A spy: canned answer + a record of the call
+final class UserLoaderSpy: UserLoading {
+    var stubbed: User
+    private(set) var receivedIds: [Int] = []
+    init(returning user: User) { stubbed = user }
+
+    func loadUser(id: Int) async throws -> User {
+        receivedIds.append(id)
+        return stubbed
+    }
+}</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="th-seams">
+      <summary><span class="chev"></span>Seams, DI & designing for testability</summary>
+      <div class="topic-body">
+        <p>A <b>seam</b> is a place you can swap behaviour without editing the code under test. You create seams with dependency injection — usually <b>constructor injection</b> of a protocol.</p>
+        <script type="text/plain" class="src">// Hard to test: reaches out to the real world itself
+struct Greeter {
+    func todaysGreeting() -> String {
+        Date().formatted()      // hidden dependency on "now"
+    }
+}
+
+// Testable: the dependency is injected, so a test can pin it
+struct Greeter2 {
+    let now: () -> Date
+    init(now: @escaping () -> Date = Date.init) { self.now = now }
+    func todaysGreeting() -> String { now().formatted() }
+}</script>
+        <p><b>Testability smells to call out</b> if you spot them: singletons and global mutable state, work done in <code class="inl">init</code>, and hidden dependencies on <code class="inl">Date()</code>, <code class="inl">UUID()</code> or <code class="inl">URLSession.shared</code>. Each one is a seam waiting to be extracted.</p>
+        <div class="say">
+          <p class="h">Say it like this</p>
+          <p><i>"Before I can test this I need a seam — I'd inject the clock as a closure or protocol so the test controls 'now'. Right now it depends on the real date, which breaks Repeatable."</i></p>
+        </div>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Reviewed</span></label>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ DRILLS ============ -->
+  <section class="view" id="view-drills">
+    <p class="lede">Copy a drill, paste into a fresh Playground, run. Everything you need is in the file — write your tests, then uncomment the reference to check.</p>
+
+    <h2>Write the tests</h2>
+
+    <details class="topic track" data-id="dr-password">
+      <summary><span class="chev"></span>Drill 1 · PasswordValidator<span class="xtag">throwing</span></summary>
+      <div class="topic-body">
+        <p class="muted">Practises: error assertions, boundary values.</p>
+        <script type="text/plain" class="src">import Foundation
+
+// ── assert helpers (these run in Playgrounds) ──
+var passed = 0, failed = 0
+func check(_ condition: Bool, _ note: String = "", line: Int = #line) {
+    if condition { passed += 1; print("✅ \(note.isEmpty ? "ok" : note)") }
+    else { failed += 1; print("❌ FAIL @\(line): \(note)") }
+}
+func checkThrows<E: Error & Equatable>(_ expected: E, _ body: () throws -> Void, line: Int = #line) {
+    do { try body(); check(false, "expected to throw \(expected)", line: line) }
+    catch let e as E { check(e == expected, "threw \(e)", line: line) }
+    catch { check(false, "threw the wrong error type", line: line) }
+}
+func summary() { print("\n— \(passed) passed, \(failed) failed —") }
+
+// ───────────────── TASK ─────────────────
+// Test validate(_:). It throws when a password is invalid, otherwise returns.
+//   • fewer than 8 characters   -> throws .tooShort
+//   • no digit                  -> throws .needsDigit
+//   • no uppercase letter       -> throws .needsUppercase
+//   • otherwise                 -> valid (does not throw)
+// Cover each rule AND the boundary: exactly 8 characters is allowed.
+
+// ── code under test ──
+enum PasswordError: Error, Equatable { case tooShort, needsDigit, needsUppercase }
+
+func validate(_ password: String) throws {
+    if password.count < 8 { throw PasswordError.tooShort }
+    if !password.contains(where: \.isNumber) { throw PasswordError.needsDigit }
+    if !password.contains(where: \.isUppercase) { throw PasswordError.needsUppercase }
+}
+
+// ── write your tests here ──
+func myTests() {
+    // check((try? validate("Hunter22")) != nil, "valid passes")
+    // checkThrows(PasswordError.tooShort) { try validate("Ab1") }
+}
+
+myTests()
+summary()
+
+// ── reference (uncomment to compare) ──
+/*
+func reference() {
+    check((try? validate("Hunter22")) != nil, "valid passes")
+    check((try? validate("Abcdef12")) != nil, "exactly 8 chars is allowed")
+    checkThrows(PasswordError.tooShort)       { try validate("Ab1") }
+    checkThrows(PasswordError.needsDigit)     { try validate("Password") }
+    checkThrows(PasswordError.needsUppercase) { try validate("password1") }
+}
+reference(); summary()
+
+// Real Swift Testing (recall):
+// @Test func rejectsShort() {
+//     #expect(throws: PasswordError.tooShort) { try validate("Ab1") }
+// }
+*/</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Done</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="dr-cart">
+      <summary><span class="chev"></span>Drill 2 · Cart totals & discount<span class="xtag">struct + state</span></summary>
+      <div class="topic-body">
+        <p class="muted">Practises: per-test isolation, value + throwing assertions.</p>
+        <script type="text/plain" class="src">import Foundation
+
+// ── assert helpers (these run in Playgrounds) ──
+var passed = 0, failed = 0
+func check(_ condition: Bool, _ note: String = "", line: Int = #line) {
+    if condition { passed += 1; print("✅ \(note.isEmpty ? "ok" : note)") }
+    else { failed += 1; print("❌ FAIL @\(line): \(note)") }
+}
+func checkThrows<E: Error & Equatable>(_ expected: E, _ body: () throws -> Void, line: Int = #line) {
+    do { try body(); check(false, "expected to throw \(expected)", line: line) }
+    catch let e as E { check(e == expected, "threw \(e)", line: line) }
+    catch { check(false, "threw the wrong error type", line: line) }
+}
+func summary() { print("\n— \(passed) passed, \(failed) failed —") }
+
+// ───────────────── TASK ─────────────────
+// Test the Cart. Write tests showing:
+//   • an empty cart has total 0
+//   • total sums price × quantity across items
+//   • discountedTotal(percent:) applies the discount (25% off 8 -> 6)
+//   • a percent outside 0...100 throws CartError.badPercent
+// Start each test from a fresh Cart — no shared state.
+
+// ── code under test ──
+struct Item { let name: String; let price: Double; let qty: Int }
+
+struct Cart {
+    private(set) var items: [Item] = []
+    mutating func add(_ item: Item) { items.append(item) }
+    var total: Double { items.reduce(0) { $0 + $1.price * Double($1.qty) } }
+
+    func discountedTotal(percent: Int) throws -> Double {
+        guard (0...100).contains(percent) else { throw CartError.badPercent }
+        return total * (1 - Double(percent) / 100)
+    }
+}
+enum CartError: Error, Equatable { case badPercent }
+
+// ── write your tests here ──
+func myTests() {
+    // var cart = Cart()
+    // check(cart.total == 0, "empty cart is 0")
+}
+
+myTests()
+summary()
+
+// ── reference (uncomment to compare) ──
+/*
+func reference() {
+    var cart = Cart()
+    check(cart.total == 0, "empty cart is 0")
+
+    cart.add(Item(name: "Risotto", price: 6, qty: 2))
+    cart.add(Item(name: "Curry",   price: 5, qty: 1))
+    check(cart.total == 17, "sums price × qty")
+
+    var c2 = Cart()
+    c2.add(Item(name: "Risotto", price: 8, qty: 1))
+    check((try? c2.discountedTotal(percent: 25)) == 6, "25% off 8 -> 6")
+
+    checkThrows(CartError.badPercent) { _ = try Cart().discountedTotal(percent: 150) }
+}
+reference(); summary()
+
+// Real Swift Testing (recall):
+// @Suite("Cart") struct CartTests {
+//     var cart = Cart()                       // fresh per test
+//     @Test func emptyIsZero() { #expect(cart.total == 0) }
+//     @Test mutating func discounts() throws {
+//         cart.add(Item(name: "R", price: 8, qty: 1))
+//         #expect(try cart.discountedTotal(percent: 25) == 6)
+//     }
+// }
+*/</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Done</span></label>
+      </div>
+    </details>
+
+    <details class="topic track" data-id="dr-checkout">
+      <summary><span class="chev"></span>Drill 3 · Checkout + a test double<span class="xtag">protocol + DI</span></summary>
+      <div class="topic-body">
+        <p class="muted">Practises: protocols, dependency injection, spies — the interview's favourite.</p>
+        <script type="text/plain" class="src">import Foundation
+
+// ── assert helpers (these run in Playgrounds) ──
+var passed = 0, failed = 0
+func check(_ condition: Bool, _ note: String = "", line: Int = #line) {
+    if condition { passed += 1; print("✅ \(note.isEmpty ? "ok" : note)") }
+    else { failed += 1; print("❌ FAIL @\(line): \(note)") }
+}
+func checkThrows<E: Error & Equatable>(_ expected: E, _ body: () throws -> Void, line: Int = #line) {
+    do { try body(); check(false, "expected to throw \(expected)", line: line) }
+    catch let e as E { check(e == expected, "threw \(e)", line: line) }
+    catch { check(false, "threw the wrong error type", line: line) }
+}
+func summary() { print("\n— \(passed) passed, \(failed) failed —") }
+
+// ───────────────── TASK ─────────────────
+// Checkout depends on the PaymentGateway protocol. Write a test double
+// (a spy) that conforms to it, then test:
+//   • pay(amount) forwards the correct amount to the gateway (spy records it)
+//   • on success, pay returns the gateway's transaction id
+//   • amount <= 0 throws CheckoutError.invalidAmount and never calls the gateway
+//   • if the gateway throws PaymentError.declined, pay propagates it
+
+// ── code under test ──
+protocol PaymentGateway {
+    func charge(_ amount: Int) throws -> String   // returns a transaction id
+}
+enum PaymentError: Error, Equatable { case declined }
+enum CheckoutError: Error, Equatable { case invalidAmount }
+
+struct Checkout {
+    let gateway: PaymentGateway
+    func pay(_ amount: Int) throws -> String {
+        guard amount > 0 else { throw CheckoutError.invalidAmount }
+        return try gateway.charge(amount)
+    }
+}
+
+// ── write your test double + tests here ──
+func myTests() {
+    // final class GatewaySpy: PaymentGateway { ... }
+}
+
+myTests()
+summary()
+
+// ── reference (uncomment to compare) ──
+/*
+final class GatewaySpy: PaymentGateway {
+    var stubbedId = "txn_123"
+    var stubbedError: PaymentError?
+    private(set) var chargedAmounts: [Int] = []
+    func charge(_ amount: Int) throws -> String {
+        chargedAmounts.append(amount)
+        if let e = stubbedError { throw e }
+        return stubbedId
+    }
+}
+
+func reference() {
+    // forwards amount + returns the id
+    let spy = GatewaySpy()
+    let id = try? Checkout(gateway: spy).pay(40)
+    check(id == "txn_123", "returns transaction id")
+    check(spy.chargedAmounts == [40], "forwarded 40 to the gateway")
+
+    // invalid amount: throws, gateway never called
+    let spy2 = GatewaySpy()
+    checkThrows(CheckoutError.invalidAmount) { _ = try Checkout(gateway: spy2).pay(0) }
+    check(spy2.chargedAmounts.isEmpty, "gateway not called on invalid amount")
+
+    // declining gateway propagates
+    let spy3 = GatewaySpy(); spy3.stubbedError = .declined
+    checkThrows(PaymentError.declined) { _ = try Checkout(gateway: spy3).pay(10) }
+}
+reference(); summary()
+
+// Real Swift Testing (recall):
+// @Test func forwardsAmount() throws {
+//     let spy = GatewaySpy()
+//     _ = try Checkout(gateway: spy).pay(40)
+//     #expect(spy.chargedAmounts == [40])
+// }
+*/</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Done</span></label>
+      </div>
+    </details>
+
+    <h2>Fix the broken test</h2>
+
+    <details class="topic track" data-id="dr-broken">
+      <summary><span class="chev"></span>Drill 4 · Spot four mistakes<span class="xtag">analysis</span></summary>
+      <div class="topic-body">
+        <p class="muted">Practises: isolation, correct assertions, safe unwrapping, fast tests.</p>
+        <script type="text/plain" class="src">import Foundation
+
+// ── assert helpers (these run in Playgrounds) ──
+var passed = 0, failed = 0
+func check(_ condition: Bool, _ note: String = "", line: Int = #line) {
+    if condition { passed += 1; print("✅ \(note.isEmpty ? "ok" : note)") }
+    else { failed += 1; print("❌ FAIL @\(line): \(note)") }
+}
+func summary() { print("\n— \(passed) passed, \(failed) failed —") }
+
+// ───────────────── TASK ─────────────────
+// This setup has FOUR problems. Fix them so the tests are:
+//   isolated (no shared state), correct (assert the real expectation),
+//   crash-free (no force-unwrap), and fast (no real waiting).
+// Fix in place, then run. Answers are in the reference block.
+
+// ── code under test (leave as-is) ──
+struct Account { var balance: Int; mutating func withdraw(_ a: Int) { balance -= a } }
+struct User { let name: String }
+func loadUser() -> User? { User(name: "Masha") }
+
+// ── the flawed tests ──
+var sharedAccount = Account(balance: 100)              // problem (a)
+
+func test_withdraw() {
+    sharedAccount.withdraw(30)
+    check(sharedAccount.balance != 70, "balance after withdraw")   // problem (b)
+}
+func test_name() {
+    let user = loadUser()
+    check(user!.name == "Masha", "user name")                      // problem (c)
+}
+func test_speed() {
+    Thread.sleep(forTimeInterval: 3)   // problem (d) — this run will pause 3s
+    check(true, "did work")
+}
+
+test_withdraw(); test_name(); test_speed()
+summary()
+
+// ── reference: the four fixes ──
+/*
+ (a) `var sharedAccount` leaks between tests -> make a fresh Account in each test.
+ (b) `!= 70` passes for every WRONG value -> should be `== 70`.
+ (c) `user!` crashes on nil -> guard/require, e.g.
+     guard let user = loadUser() else { check(false, "user was nil"); return }
+ (d) `Thread.sleep(3)` breaks Fast + Repeatable -> remove it; inject a clock if
+     the real code needs time, and assert behaviour instead of waiting.
+
+Fixed:
+
+func test_withdraw() {
+    var account = Account(balance: 100)      // fresh, isolated
+    account.withdraw(30)
+    check(account.balance == 70, "balance after withdraw")
+}
+func test_name() {
+    guard let user = loadUser() else { check(false, "user was nil"); return }
+    check(user.name == "Masha", "user name")
+}
+func test_speed() {
+    check(true, "no real waiting")
+}
+
+// Real Swift Testing (recall): the unwrap becomes
+// let user = try #require(loadUser())
+*/</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Done</span></label>
+      </div>
+    </details>
+
+    <h2>TDD kata — red, green, refactor</h2>
+
+    <details class="topic track" data-id="dr-fizzbuzz">
+      <summary><span class="chev"></span>Drill 5 · FizzBuzz, one test at a time<span class="xtag">TDD</span></summary>
+      <div class="topic-body">
+        <p class="muted">Practises: writing the failing test first, then the least code to pass.</p>
+        <script type="text/plain" class="src">import Foundation
+
+// ── assert helpers (these run in Playgrounds) ──
+var passed = 0, failed = 0
+func check(_ condition: Bool, _ note: String = "", line: Int = #line) {
+    if condition { passed += 1; print("✅ \(note.isEmpty ? "ok" : note)") }
+    else { failed += 1; print("❌ FAIL @\(line): \(note)") }
+}
+func summary() { print("\n— \(passed) passed, \(failed) failed —") }
+
+// ───────────────── TASK (TDD: test first, then implement) ─────────────────
+// Grow fizzbuzz one case at a time. Write a failing check, watch it fail,
+// then add just enough code to pass:
+//   1 -> "1",  2 -> "2",  3 -> "Fizz",  5 -> "Buzz",  15 -> "FizzBuzz"
+// Order matters: handle the %15 case (or %3 && %5) before %3 and %5.
+
+// ── code under test (starts red) ──
+func fizzbuzz(_ n: Int) -> String {
+    return ""   // TODO: implement to make your checks pass
+}
+
+// ── write your tests here ──
+func myTests() {
+    // check(fizzbuzz(1) == "1", "1")
+    // check(fizzbuzz(3) == "Fizz", "3 -> Fizz")
+}
+
+myTests()
+summary()
+
+// ── reference (remove the stub above, then uncomment) ──
+/*
+func fizzbuzz(_ n: Int) -> String {
+    var out = ""
+    if n % 3 == 0 { out += "Fizz" }
+    if n % 5 == 0 { out += "Buzz" }
+    return out.isEmpty ? "\(n)" : out
+}
+func reference() {
+    let cases: [(Int, String)] = [(1,"1"),(2,"2"),(3,"Fizz"),(5,"Buzz"),(15,"FizzBuzz")]
+    for (n, expected) in cases { check(fizzbuzz(n) == expected, "fizzbuzz(\(n))") }
+}
+reference(); summary()
+
+// Real Swift Testing (recall) — the finished tests fold into one parameterized test:
+// @Test(arguments: zip([1,2,3,5,15], ["1","2","Fizz","Buzz","FizzBuzz"]))
+// func maps(_ n: Int, _ expected: String) { #expect(fizzbuzz(n) == expected) }
+*/</script>
+        <label class="done"><input type="checkbox"><span class="box"></span><span class="lbl">Done</span></label>
+      </div>
+    </details>
+  </section>
+
+  <!-- ============ RECALL ============ -->
+  <section class="view" id="view-recall">
+    <p class="lede">Flip through these until each answer arrives before you tap. Mark the ones you nail.</p>
+    <div class="fc-top">
+      <div class="fc-count">Card <b id="fcIndex">1</b> / <span id="fcTotal">0</span> · <span id="fcKnown">0</span> mastered</div>
+      <button class="tab" id="fcShuffle" style="border-color:var(--line)">Shuffle</button>
+    </div>
+    <div class="card" id="card">
+      <span class="side" id="cardSide">Question</span>
+      <div class="q" id="cardText">—</div>
+      <div class="hint" id="cardHint">Tap to flip</div>
+    </div>
+    <div class="fc-actions">
+      <button class="review" id="fcReview">Needs review</button>
+      <button class="known" id="fcKnownBtn">Got it</button>
+    </div>
+    <div class="fc-nav">
+      <button id="fcPrev">‹ Prev</button>
+      <span class="muted" id="fcState"></span>
+      <button id="fcNext">Next ›</button>
+    </div>
+  </section>
+
+  <!-- ============ FINAL 30 ============ -->
+  <section class="view" id="view-final">
+    <p class="lede">Thirty minutes out. Skim the sheet, run the quiz, keep the fallback lines handy.</p>
+
+    <div class="panel">
+      <h3 style="margin-top:0">Syntax, at a glance</h3>
+      <script type="text/plain" class="src">@Test func name() { #expect(a == b) }        // a test + soft check
+@Test("Display name") func f() { }            // readable label
+try #require(optional)                         // unwrap-or-stop (hard)
+#expect(throws: MyError.self) { try f() }      // asserts it throws
+#expect(throws: Never.self)  { try f() }       // asserts it doesn't
+@Suite struct S { init() { } }                 // group; init = setUp
+@Test func a() async { await thing() }         // async is built-in
+await confirmation("fired") { done in done() } // callback fired?
+@Test(arguments: zip(inputs, expected))        // paired param tests
+@Test(.disabled("why")) / .enabled(if:) / .tags(.fast)
+Issue.record("msg")                            // == XCTFail</script>
+    </div>
+
+    <div class="panel soft quiet">
+      <h3 style="margin-top:0">Theory, one line each</h3>
+      <ul class="tick" style="margin-bottom:0">
+        <li><b>AAA / GWT</b> — arrange, act (once), assert.</li>
+        <li><b>FIRST</b> — Fast, Isolated, Repeatable, Self-validating, Timely.</li>
+        <li><b>#expect vs #require</b> — soft (keeps going) vs hard (throws, stops; use to unwrap).</li>
+        <li><b>DRY</b> — one home per rule; but <b>DAMP over DRY in tests</b> for readability.</li>
+        <li><b>KISS / YAGNI</b> — simplest thing; don't build for imagined futures.</li>
+        <li><b>Dependency Inversion</b> — inject protocols → drop in fakes → testable.</li>
+        <li><b>Doubles</b> — stub (answers), spy (records), mock (verifies), fake (real-lite).</li>
+        <li><b>Seam</b> — inject the clock / network / storage instead of calling the real thing.</li>
+      </ul>
+    </div>
+
+    <div class="say">
+      <p class="h">If your mind goes blank, say one of these</p>
+      <p><i>"Before I write anything — can I confirm the expected behaviour for the edge cases: empty input, and out-of-range values?"</i></p>
+      <p><i>"I'll start with the failing test so we agree on the contract, then make it pass."</i></p>
+      <p><i>"This has a hidden dependency on the current date — I'd inject it as a seam so the test is repeatable."</i></p>
+      <p><i>"I'll keep these two cases duplicated rather than share a helper — clearer to read when one fails."</i></p>
+    </div>
+
+    <h3>Rapid self-quiz</h3>
+    <div id="quiz"></div>
+  </section>
+
+  </main>
+  <footer>Progress saves on this device. For it to persist, open this file in a browser that keeps local data (e.g. Documents by Readdle) rather than a preview pane. — 04 · Swift Testing</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- turn <script type=text/plain class=src> into code blocks ---------- */
+  document.querySelectorAll('script.src').forEach(function(s){
+    var raw = s.textContent.replace(/^\n/,'').replace(/\s+$/,'');
+    var pre = document.createElement('pre');
+    var top = document.createElement('div'); top.className='cptop';
+    var btn = document.createElement('button'); btn.className='copy'; btn.type='button'; btn.textContent='Copy';
+    var code = document.createElement('code'); code.textContent = raw;
+    btn.addEventListener('click', function(){
+      var done = function(){ btn.textContent='Copied'; btn.classList.add('ok'); setTimeout(function(){btn.textContent='Copy';btn.classList.remove('ok');},1200); };
+      if (navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(raw).then(done, function(){ selectNode(code); });
+      } else { selectNode(code); }
+    });
+    top.appendChild(btn); pre.appendChild(top); pre.appendChild(code);
+    s.parentNode.replaceChild(pre, s);
+  });
+  function selectNode(node){
+    try{ var r=document.createRange(); r.selectNodeContents(node); var sel=window.getSelection(); sel.removeAllRanges(); sel.addRange(r);}catch(e){}
+  }
+
+  /* ---------- persistence ---------- */
+  var KEY='swiftTestingGuide.v1';
+  var store = { done:{}, cards:{}, view:'start' };
+  try { var raw=localStorage.getItem(KEY); if(raw) store=Object.assign(store, JSON.parse(raw)); } catch(e){}
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(store)); }catch(e){} }
+
+  /* ---------- completion checkboxes ---------- */
+  var topics = Array.prototype.slice.call(document.querySelectorAll('.track'));
+  topics.forEach(function(t){
+    var id=t.getAttribute('data-id');
+    var cb=t.querySelector('.done input');
+    if(!cb) return;
+    if(store.done[id]) cb.checked=true;
+    cb.addEventListener('change', function(){ store.done[id]=cb.checked; save(); updateProgress(); });
+  });
+
+  function countIn(prefix){
+    var tot=0,don=0;
+    topics.forEach(function(t){
+      var id=t.getAttribute('data-id');
+      if(id.indexOf(prefix)===0){ tot++; if(store.done[id]) don++; }
+    });
+    return {tot:tot,don:don};
+  }
+  function updateProgress(){
+    var total=topics.length, done=0;
+    topics.forEach(function(t){ if(store.done[t.getAttribute('data-id')]) done++; });
+    var pct = total? Math.round(done/total*100):0;
+    var circ=157;
+    document.getElementById('ringFill').setAttribute('stroke-dashoffset', circ - circ*(pct/100));
+    document.getElementById('ringPct').textContent = pct+'%';
+    document.getElementById('ringDone').textContent = done;
+    document.getElementById('ringTotal').textContent = total;
+    var fw=countIn('fw-'), th=countIn('th-'), dr=countIn('dr-');
+    document.getElementById('nFramework').textContent = fw.don+'/'+fw.tot;
+    document.getElementById('nTheory').textContent = th.don+'/'+th.tot;
+    document.getElementById('nDrills').textContent = dr.don+'/'+dr.tot;
+    var known=0; Object.keys(store.cards).forEach(function(k){ if(store.cards[k]==='known') known++; });
+    document.getElementById('fcMastery').textContent = known+' card'+(known===1?'':'s')+' mastered';
+  }
+
+  /* ---------- tab navigation ---------- */
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab[data-view]'));
+  function show(view){
+    tabs.forEach(function(tb){ tb.setAttribute('aria-selected', tb.getAttribute('data-view')===view); });
+    document.querySelectorAll('section.view').forEach(function(sec){ sec.classList.toggle('active', sec.id==='view-'+view); });
+    store.view=view; save();
+    window.scrollTo({top:0,behavior:'auto'});
+  }
+  tabs.forEach(function(tb){ tb.addEventListener('click', function(){ show(tb.getAttribute('data-view')); }); });
+
+  /* ---------- flashcards ---------- */
+  var CARDS=[
+    {id:'c1', q:'#expect vs. try #require — the difference?', a:'#expect is soft: records a failure and keeps running. try #require is hard: throws and stops the test. Use #require to unwrap optionals and when later assertions depend on this one.'},
+    {id:'c2', q:'Where does setUp go in Swift Testing? And tearDown?', a:'setUp → init() on the suite (runs before each test; a fresh instance per test gives isolation). tearDown → deinit on a final class, or often unnecessary because the instance is discarded.'},
+    {id:'c3', q:'Assert that a call throws a specific error.', a:'#expect(throws: MyError.someCase) { try thing() }. For "must not throw", use #expect(throws: Never.self).'},
+    {id:'c4', q:'Run one test over many inputs?', a:'@Test(arguments: collection). Use zip(inputs, expected) for matched pairs; two separate collections give the full cross product.'},
+    {id:'c5', q:'XCTUnwrap becomes…?', a:'try #require(value) — unwraps or throws to end the test cleanly (no crash).'},
+    {id:'c6', q:'Test an async callback fires?', a:'await confirmation("label") { fulfil in obj.onDone = { fulfil() }; obj.run() }. Add expectedCount: for an exact number.'},
+    {id:'c7', q:'What does FIRST stand for?', a:'Fast, Isolated, Repeatable, Self-validating, Timely.'},
+    {id:'c8', q:'DRY — and its caveat in tests?', a:'Don\u2019t repeat knowledge; one rule, one place. In tests prefer DAMP over DRY: a little duplication that keeps each test readable beats a shared helper that hides intent.'},
+    {id:'c9', q:'Which SOLID letter makes code testable, and why?', a:'Dependency Inversion — depend on protocols, not concrete types, so a test can inject a fake in place of the real dependency.'},
+    {id:'c10', q:'Stub vs. spy vs. mock vs. fake?', a:'Stub returns canned answers; spy also records calls to assert on; mock is pre-set with expectations and fails if they\u2019re unmet; fake is a real lightweight implementation (e.g. in-memory store).'},
+    {id:'c11', q:'What is a "seam" and how do you make one?', a:'A place to swap behaviour without editing the code under test. Create it with dependency injection — typically constructor-inject a protocol (or a closure like a clock).'},
+    {id:'c12', q:'XCTFail equivalent?', a:'Issue.record("message").'},
+    {id:'c13', q:'Three testability smells to flag on sight.', a:'Singletons / global mutable state; work done in init; hidden dependencies on Date(), UUID(), or URLSession.shared.'},
+    {id:'c14', q:'First thing you do when handed the coding exercise?', a:'Clarify requirements and edge cases out loud before coding — empty input, boundaries, error vs. default. Then narrate your approach.'},
+    {id:'c15', q:'Disable or conditionally run a test?', a:'.disabled("reason") always skips; .enabled(if: condition) runs only when true. Both are traits on @Test.'}
+  ];
+  var order = CARDS.map(function(_,i){return i;});
+  var pos=0, flipped=false;
+  var elText=document.getElementById('cardText'), elSide=document.getElementById('cardSide'),
+      elHint=document.getElementById('cardHint'), elIdx=document.getElementById('fcIndex'),
+      elKnown=document.getElementById('fcKnown'), elState=document.getElementById('fcState');
+  document.getElementById('fcTotal').textContent=CARDS.length;
+
+  function curCard(){ return CARDS[order[pos]]; }
+  function renderCard(){
+    var c=curCard();
+    elIdx.textContent = pos+1;
+    if(flipped){ elSide.textContent='Answer'; elText.className='a'; elText.textContent=c.a; elHint.textContent='Tap to flip back'; }
+    else { elSide.textContent='Question'; elText.className='q'; elText.textContent=c.q; elHint.textContent='Tap to flip'; }
+    var st=store.cards[c.id];
+    elState.textContent = st==='known' ? 'Marked: got it' : st==='review' ? 'Marked: review' : '';
+    var known=0; CARDS.forEach(function(cc){ if(store.cards[cc.id]==='known') known++; });
+    elKnown.textContent=known;
+  }
+  document.getElementById('card').addEventListener('click', function(){ flipped=!flipped; renderCard(); });
+  document.getElementById('fcNext').addEventListener('click', function(){ pos=(pos+1)%CARDS.length; flipped=false; renderCard(); });
+  document.getElementById('fcPrev').addEventListener('click', function(){ pos=(pos-1+CARDS.length)%CARDS.length; flipped=false; renderCard(); });
+  document.getElementById('fcKnownBtn').addEventListener('click', function(){ store.cards[curCard().id]='known'; save(); updateProgress(); pos=(pos+1)%CARDS.length; flipped=false; renderCard(); });
+  document.getElementById('fcReview').addEventListener('click', function(){ store.cards[curCard().id]='review'; save(); updateProgress(); renderCard(); });
+  document.getElementById('fcShuffle').addEventListener('click', function(){
+    for(var i=order.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=order[i]; order[i]=order[j]; order[j]=t; }
+    pos=0; flipped=false; renderCard();
+  });
+
+  /* ---------- final quiz ---------- */
+  var QUIZ=[
+    {q:'You need to unwrap an optional and stop the test if it\u2019s nil. Which do you reach for?',
+     opts:['#expect(value != nil)','try #require(value)','Issue.record("nil")','#expect(throws:)'],
+     correct:1, why:'try #require unwraps and throws on nil, ending the test cleanly — the XCTUnwrap replacement.'},
+    {q:'Which correctly asserts that validate("") throws PasswordError.tooShort?',
+     opts:['#expect(validate("") == .tooShort)','#expect(throws: PasswordError.tooShort) { try validate("") }','try validate("")','confirmation { try validate("") }'],
+     correct:1, why:'Pass the specific error value to #expect(throws:) with a trailing closure that performs the throwing call.'},
+    {q:'In a struct @Suite, why is each test isolated by default?',
+     opts:['Tests run on separate threads','A fresh suite instance is created per test','#expect resets globals','init() clears static state'],
+     correct:1, why:'Swift Testing instantiates the suite once per test function, so stored properties can\u2019t leak between tests.'},
+    {q:'@Test(arguments: [1,2], ["a","b"]) produces how many test cases?',
+     opts:['2 (paired)','4 (cross product)','1','It won\u2019t compile'],
+     correct:1, why:'Two separate collections create the cross product — every combination. Use zip(...) for 2 matched pairs.'},
+    {q:'Which is the strongest "clean code" answer about DRY in tests?',
+     opts:['Always extract shared helpers','Never repeat any line','Some duplication is fine if it keeps tests readable (DAMP)','Tests don\u2019t need DRY at all'],
+     correct:2, why:'DAMP over DRY: readability of each test in isolation outweighs eliminating every repetition.'}
+  ];
+  var quizEl=document.getElementById('quiz');
+  QUIZ.forEach(function(item, qi){
+    var block=document.createElement('div'); block.className='q-block';
+    var qh=document.createElement('div'); qh.className='qq'; qh.textContent=(qi+1)+'. '+item.q; block.appendChild(qh);
+    var answered=false;
+    item.opts.forEach(function(opt, oi){
+      var b=document.createElement('button'); b.className='opt'; b.type='button'; b.textContent=opt;
+      b.addEventListener('click', function(){
+        if(answered) return; answered=true;
+        if(oi===item.correct){ b.classList.add('correct'); }
+        else { b.classList.add('wrong'); block.querySelectorAll('.opt')[item.correct].classList.add('correct'); }
+        block.querySelector('.explain').classList.add('show');
+      });
+      block.appendChild(b);
+    });
+    var ex=document.createElement('p'); ex.className='explain'; ex.textContent=item.why; block.appendChild(ex);
+    quizEl.appendChild(block);
+  });
+
+  /* ---------- reset ---------- */
+  document.getElementById('resetBtn').addEventListener('click', function(){
+    if(!confirm('Clear all ticks and card marks on this device?')) return;
+    store={done:{},cards:{},view:store.view};
+    save();
+    topics.forEach(function(t){ var cb=t.querySelector('.done input'); if(cb) cb.checked=false; });
+    updateProgress(); renderCard();
+  });
+
+  /* ---------- init ---------- */
+  renderCard();
+  updateProgress();
+  show(store.view||'start');
+})();
+</script>
+</body>
+</html>
