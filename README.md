@@ -2,12 +2,12 @@
 Most study advice assumes you learn like everyone else, with time you don't have.  
 This talk is about using Claude to build a study guide that fits you.
 
-### What you need to know beforehand:
+### What you need to know beforehand
 - your study preferences;
 - your subject;
 - your constraints.
 
-#### Initial prompt:
+#### Initial prompt
 ```
 // What
 I want to create an interactive study guide for my interview prep. 
@@ -27,7 +27,7 @@ So if you want to include an article in my study guide, it can’t be a link - y
 Ask clarifying questions before you start. I prefer a clean girl aesthetic in my study guides. 
 ```
 
-#### Additional prompt:
+#### Additional prompt
 ```
 Okay, coding on iPad is not the most comfortable. 
 Let’s update practice for tests: for each task, I want you to create a coding setup, class/struct/protocol to test and the task written as a comment. 
