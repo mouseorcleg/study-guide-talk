@@ -1,2 +1,39 @@
-# study-guide-talk
-Less effort, more learning: study guides with Claude
+# Less effort, more learning: study guides with Claude
+Most study advice assumes you learn like everyone else, with time you don't have.  
+This talk is about using Claude to build a study guide that fits you.
+
+### What you need to know beforehand:
+- your study preferences;
+- your subject;
+- your constraints.
+
+#### Initial prompt:
+```
+// What
+I want to create an interactive study guide for my interview prep. 
+I need a refresher on theory and actual coding exercises for Swift Testing. 
+Make sure I would be able to use it offline, and it will persist my progress locally
+
+// HOW
+I prefer text over video or audio this time.
+With a focus on writing tests manually and recalling how the main theory concepts work (KISS, DRY, etc.). 
+I have access to an iPad and the Playground app. 
+
+// CONSTRAINS
+I will have 3-5 hours of preparation time over two days + a refresher bit around half an hour right before the interview. 
+Note that I would not have access to the internet for a few hours of my prep time. 
+So if you want to include an article in my study guide, it can’t be a link - you’ll have to download it in a nice format beforehand
+
+Ask clarifying questions before you start. I prefer a clean girl aesthetic in my study guides. 
+/plan
+```
+
+#### Additional prompt:
+```
+Okay, coding on iPad is not the most comfortable. 
+Let’s update practice for tests: for each task, I want you to create a coding setup, class/struct/protocol to test and the task written as a comment. 
+Add a copy button so I can copy it with one click and paste in a new Playground file. 
+And work solely there without switching back and forth. 
+And make a test setup so I can get the assets there. 
+Update the guide
+```
