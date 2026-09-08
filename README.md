@@ -24,7 +24,8 @@ I will have 3-5 hours of preparation time over two days + a refresher bit around
 Note that I would not have access to the internet for a few hours of my prep time. 
 So if you want to include an article in my study guide, it can’t be a link - you’ll have to download it in a nice format beforehand
 
-Ask clarifying questions before you start. I prefer a clean girl aesthetic in my study guides. 
+Ask clarifying questions before you start, and confirm the plan with me before building.  
+I prefer a clean girl aesthetic in my study guides. 
 ```
 
 #### Additional prompt
@@ -36,3 +37,6 @@ And work solely there without switching back and forth.
 And make a test setup so I can get the assets there. 
 Update the guide
 ```
+
+Just in case:
+
