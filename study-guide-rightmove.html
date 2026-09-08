@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>iOS Interview Study Guide · Rightmove</title>
+<style>
+  :root{
+    --bg:#F4F1EB; --surface:#FBF9F4; --surface-2:#EFEBE2; --recess:#ECE7DD;
+    --ink:#34302A; --ink-soft:#6B655B; --ink-faint:#9C968A;
+    --line:#E4DFD4; --line-soft:#EDE9E0;
+    --sage:#7E8B6F; --sage-deep:#62705A; --sage-soft:#DEE3D4;
+    --brass:#B49A63; --bad:#B0705E;
+    --r:15px; --r-sm:10px;
+    --serif:ui-serif,"New York",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,system-ui,"SF Pro Text",Segoe UI,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    --maxw:760px; --navh:118px;
+  }
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%; scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:var(--sans); font-size:17px; line-height:1.62;
+    -webkit-font-smoothing:antialiased; letter-spacing:.005em; padding-bottom:64px;
+  }
+  ::selection{background:var(--sage-soft);}
+
+  .top{
+    position:sticky; top:0; z-index:20; background:rgba(244,241,235,.9);
+    backdrop-filter:saturate(140%) blur(14px); -webkit-backdrop-filter:saturate(140%) blur(14px);
+    border-bottom:1px solid var(--line); padding:env(safe-area-inset-top) 0 0;
+  }
+  .top-inner{max-width:var(--maxw); margin:0 auto; padding:13px 22px 0;}
+  .brand{display:flex; align-items:baseline; gap:11px; flex-wrap:wrap;}
+  .brand h1{font-family:var(--serif); font-weight:500; font-size:19px; margin:0; letter-spacing:.01em;}
+  .brand .sub{font-size:12.5px; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase;}
+
+  nav.tabs{display:flex; gap:4px; overflow-x:auto; padding:12px 22px; margin:0 auto; max-width:var(--maxw);
+    scrollbar-width:none; -ms-overflow-style:none;}
+  nav.tabs::-webkit-scrollbar{display:none;}
+  nav.tabs a{
+    flex:0 0 auto; text-decoration:none; font-size:14px; color:var(--ink-soft);
+    padding:6px 13px; border-radius:99px; white-space:nowrap; letter-spacing:.01em;
+    transition:background .2s,color .2s;
+  }
+  nav.tabs a:hover{background:var(--ink); color:var(--bg);}
+
+  main{max-width:var(--maxw); margin:0 auto; padding:14px 22px 0;}
+  section{padding-top:24px; scroll-margin-top:var(--navh); border-top:1px solid transparent;}
+  section + section{border-top:1px solid var(--line); margin-top:30px;}
+
+  .eyebrow{font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--brass); margin:0 0 9px; font-weight:600;}
+  h2{font-family:var(--serif); font-weight:500; font-size:30px; line-height:1.15; margin:0 0 6px; letter-spacing:.005em;}
+  h3{font-family:var(--serif); font-weight:500; font-size:21px; margin:32px 0 10px; letter-spacing:.01em;}
+  h4{font-size:15px; font-weight:650; margin:0 0 7px; letter-spacing:.01em;}
+  .lede{color:var(--ink-soft); font-size:17px; margin:0 0 8px;}
+  p{margin:0 0 14px;}
+  a{color:var(--sage-deep); text-underline-offset:3px;}
+  strong{font-weight:650;} em{color:var(--ink-soft);}
+  .quiet{color:var(--ink-soft); font-size:15.5px;}
+
+  ul,ol{margin:0 0 14px; padding-left:20px;}
+  li{margin:0 0 7px;}
+  ul.tight li,ol.tight li{margin:0 0 3px;}
+
+  .card{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:18px 20px; margin:14px 0;}
+  .note{border-left:3px solid var(--sage); background:var(--sage-soft); border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 17px; margin:16px 0; font-size:15.5px;}
+  .note .k{font-weight:650; color:var(--sage-deep);}
+  .warn{border-left:3px solid var(--bad); background:#F3E6E0; border-radius:0 var(--r-sm) var(--r-sm) 0; padding:13px 17px; margin:16px 0; font-size:15.5px;}
+
+  pre{background:var(--surface-2); border:1px solid var(--line); border-left:3px solid var(--sage);
+    border-radius:var(--r-sm); padding:14px 16px; overflow-x:auto; margin:12px 0;}
+  code{font-family:var(--mono); font-size:13.5px; line-height:1.6;}
+  p code,li code{background:var(--surface-2); padding:1.5px 6px; border-radius:6px; font-size:13px;}
+
+  .day-pill{display:inline-block; font-size:11.5px; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--sage-deep); background:var(--sage-soft); border-radius:99px; padding:3px 11px; margin:0 0 10px;}
+
+  /* tap-to-reveal flashcards (native <details>, no JS) */
+  .grid{display:grid; gap:12px; margin:16px 0;}
+  details.flip{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); overflow:hidden;}
+  details.flip > summary{
+    list-style:none; cursor:pointer; padding:17px 20px;
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+  }
+  details.flip > summary::-webkit-details-marker{display:none;}
+  details.flip > summary:focus-visible{outline:2.5px solid var(--sage); outline-offset:-3px;}
+  .term{font-family:var(--serif); font-size:20px; font-weight:500;}
+  .term .full{display:block; font-family:var(--sans); font-size:12.5px; color:var(--ink-faint); letter-spacing:.03em; margin-top:2px; font-weight:400;}
+  .cue{font-size:12px; color:var(--ink-faint); letter-spacing:.04em; text-transform:uppercase; flex:0 0 auto;}
+  details.flip[open] > summary .cue{opacity:0;}
+  .back{padding:0 20px 18px;}
+  .back > :first-child{margin-top:0;}
+  .soundbite{font-style:italic; color:var(--sage-deep); margin-top:12px; font-size:15px;}
+
+  /* reveal blocks (drills, quiz) */
+  details.reveal{margin:10px 0 0;}
+  details.reveal > summary{
+    list-style:none; cursor:pointer; display:inline-block;
+    font-size:13.5px; color:var(--sage-deep); background:transparent;
+    border:1px dashed var(--sage); border-radius:99px; padding:6px 15px;
+  }
+  details.reveal > summary::-webkit-details-marker{display:none;}
+  details.reveal > summary:focus-visible{outline:2.5px solid var(--sage); outline-offset:2px;}
+  details.reveal[open] > summary{margin-bottom:8px;}
+  details.reveal > summary .lbl-open{display:none;}
+  details.reveal[open] > summary .lbl-closed{display:none;}
+  details.reveal[open] > summary .lbl-open{display:inline;}
+
+  .q{background:var(--surface); border:1px solid var(--line); border-radius:var(--r); padding:16px 20px; margin:12px 0;}
+  .q .qtext{font-weight:600; margin-bottom:2px;}
+  .q .num{font-family:var(--serif); color:var(--brass); font-size:15px; margin-right:8px;}
+  .ans{color:var(--ink-soft); font-size:15.5px;}
+
+  /* checklist — pure CSS, tickable in Quick Look */
+  .check{list-style:none; padding:0; margin:14px 0;}
+  .check label{display:flex; align-items:flex-start; gap:11px; padding:11px 14px; background:var(--surface);
+    border:1px solid var(--line); border-radius:var(--r-sm); margin-bottom:8px; cursor:pointer;}
+  .check input{position:absolute; opacity:0; width:0; height:0;}
+  .check .box{flex:0 0 22px; width:22px; height:22px; border-radius:6px; border:1.5px solid var(--ink-faint);
+    margin-top:1px; display:grid; place-items:center; transition:.15s;}
+  .check .box svg{width:13px; height:13px; opacity:0; transition:opacity .15s;}
+  .check input:checked + .box{background:var(--sage); border-color:var(--sage);}
+  .check input:checked + .box svg{opacity:1;}
+  .check input:checked ~ .lbl{color:var(--ink-faint); text-decoration:line-through;}
+  .lbl{font-size:15.5px;} .lbl small{display:block; color:var(--ink-faint); font-size:13px; text-decoration:none; margin-top:1px;}
+
+  .mantra{font-family:var(--serif); font-size:24px; line-height:1.3; text-align:center; color:var(--sage-deep);
+    padding:22px; margin:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+
+  /* progressive-enhancement layer (Documents by Readdle etc.) */
+  .prog{max-width:var(--maxw); margin:0 auto; padding:0 22px 12px;}
+  .prog-track{height:4px; background:var(--recess); border-radius:99px; overflow:hidden;}
+  .prog-fill{height:100%; width:0%; background:var(--sage); border-radius:99px; transition:width .5s cubic-bezier(.4,0,.2,1);}
+  .prog-label{font-size:11.5px; color:var(--ink-faint); margin-top:6px; letter-spacing:.02em;}
+  .got{margin-top:14px;}
+  .got button{font-family:var(--sans); font-size:13px; border:1px solid var(--line); background:var(--surface-2);
+    color:var(--ink-soft); border-radius:99px; padding:5px 14px; cursor:pointer; transition:.2s;}
+  .got button:hover{border-color:var(--sage); color:var(--sage-deep);}
+  details.flip.mastered{border-color:var(--sage);}
+  details.flip.mastered .got button{background:var(--sage); color:var(--bg); border-color:var(--sage);}
+
+  /* copyable code snippets */
+  .snippet{border:1px solid var(--line); border-radius:var(--r-sm); overflow:hidden; margin:14px 0;}
+  .snippet-bar{display:flex; justify-content:space-between; align-items:center;
+    background:var(--surface-2); border-bottom:1px solid var(--line); padding:7px 8px 7px 14px;}
+  .snippet-bar .label{font-size:11px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint);}
+  .snippet .copy{font-family:var(--sans); font-size:12.5px; letter-spacing:.02em;
+    border:1px solid var(--line); background:var(--surface); color:var(--ink-soft);
+    border-radius:99px; padding:5px 15px; cursor:pointer; transition:.18s;}
+  .snippet .copy:hover{border-color:var(--sage); color:var(--sage-deep);}
+  .snippet .copy.done{background:var(--sage); color:var(--bg); border-color:var(--sage);}
+  .snippet pre{margin:0; border:none; border-radius:0;}
+
+  footer{max-width:var(--maxw); margin:36px auto 0; padding:22px; color:var(--ink-faint); font-size:13px; text-align:center;}
+
+  @media (max-width:520px){
+    body{font-size:16px;} h2{font-size:26px;}
+    main{padding:12px 18px 0;} .top-inner{padding:11px 18px 0;} nav.tabs{padding:11px 18px;}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;} html{scroll-behavior:auto;}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-inner">
+    <div class="brand"><h1>iOS Interview — Study Guide</h1><span class="sub">Rightmove · 16 Jun</span></div>
+  </div>
+  <nav class="tabs">
+    <a href="#start">Start</a><a href="#theory">Theory</a><a href="#testing">Testing</a>
+    <a href="#arch">Architecture</a><a href="#coding">Coding</a><a href="#design">Design</a>
+    <a href="#quiz">Quiz</a><a href="#dayof">Day Of</a>
+  </nav>
+</header>
+
+<main>
+
+<section id="start">
+  <p class="eyebrow">Start here</p>
+  <h2>Two sessions, one mindset.</h2>
+  <p class="lede">A coding pair-session and a system-design whiteboard, 10:00–12:30 on Teams. Tap any concept below to reveal it — recall first, then check yourself.</p>
+
+  <div class="note"><span class="k">The one rule that decides outcomes.</span> Don’t start coding or drawing until you’ve clarified the requirements out loud. Ask questions, restate the brief back, agree on scope. The most common rejection note is candidates who skip this. Do it first, every time.</div>
+
+  <h3>Your two days</h3>
+  <p><span class="day-pill">Day 1 · ~2h</span></p>
+  <ul class="tight"><li><strong>Theory</strong> — open every card, recall the definition aloud before you check.</li><li><strong>Testing</strong> — read the primer, then type the iPad drills into Playgrounds for real.</li></ul>
+  <p><span class="day-pill">Day 2 · ~2h</span></p>
+  <ul class="tight"><li><strong>Architecture</strong> — the 4D model + key components.</li><li><strong>Coding &amp; Design playbooks</strong> — rehearse the worked property-feed example aloud.</li><li><strong>Quiz</strong> — cold recall to find gaps.</li></ul>
+  <p><span class="day-pill">Tue · 30 min</span></p>
+  <ul class="tight"><li><strong>Day Of</strong> — high-yield cards, the mantra, and the setup checklist.</li></ul>
+
+  <h3>What they assess</h3>
+  <div class="card quiet">Effective communication · product mindedness · iOS technical knowledge · time management &amp; decision-making · coding ability · problem solving · accepting guidance &amp; feedback · clean-code principles (DRY, KISS…).<br><br>Notice how much is <em>not</em> raw coding. Narration, collaboration, and judgement carry equal weight.</div>
+
+  <div class="warn"><strong>Allowed:</strong> IDE autocomplete, reading docs. <strong>Not allowed:</strong> AI assistants (Copilot, ChatGPT, etc.). You won’t be asked to implement networking, persistence, or complex framework features — so don’t gold-plate those.</div>
+</section>
+
+<section id="theory">
+  <p class="eyebrow">Day 1 · Theory</p>
+  <h2>Principles, on demand.</h2>
+  <p class="lede">Say the definition and the one-line soundbite aloud <em>before</em> you open each card — that’s the recall rep.</p>
+  <div class="grid">
+
+    <details class="flip"><summary><span class="term">KISS<span class="full">Keep It Simple</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Prefer the simplest design that satisfies the requirement. Clever code is a liability — harder to read, test, and change. Reach for complexity only when a real requirement forces it.</p>
+      <pre><code>// Nested branching → flat, readable guard
+func discount(_ price: Double, isMember: Bool) -> Double {
+    guard isMember else { return price }
+    return price * 0.9
+}</code></pre>
+      <p class="soundbite">“I start with the simplest thing that works, and let tests pull me toward complexity only when needed.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">DRY<span class="full">Don’t Repeat Yourself</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Every piece of knowledge should have one authoritative home. But watch for <em>premature</em> deduplication — incidental duplication is cheaper than the wrong abstraction. Rule of three: extract on the third occurrence.</p>
+      <pre><code>extension Double {
+    var asGBP: String { "£" + String(format: "%.0f", self) }
+}</code></pre>
+      <p class="soundbite">“Duplication is cheaper than the wrong abstraction — I dedupe knowledge, not coincidence.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">YAGNI<span class="full">You Aren’t Gonna Need It</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Don’t build for hypothetical future requirements. Speculative generality adds surface area to maintain and test for value that may never arrive. Build for today’s requirement; refactor when tomorrow’s actually shows up.</p>
+      <p class="soundbite">“I’ll add the abstraction when a second concrete case asks for it, not before.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">S — Single Responsibility<span class="full">SOLID</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>A type should have <strong>one reason to change</strong>. A view model that also does networking has two: UI logic and transport. Split them.</p>
+      <pre><code>final class ListingsViewModel {       // formats state only
+    private let repo: ListingsRepository
+    init(repo: ListingsRepository) { self.repo = repo }
+}</code></pre>
+      <p class="soundbite">“One responsibility per type means one reason to touch it — easier to test, safer to change.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">O — Open / Closed<span class="full">SOLID</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Open for extension, closed for modification. Add behaviour by adding new types, not by editing a growing <code>switch</code>.</p>
+      <pre><code>protocol Discount { func apply(to price: Double) -> Double }
+struct MemberDiscount: Discount {
+    func apply(to p: Double) -> Double { p * 0.9 }
+}
+// new rule = new conformance, existing code untouched</code></pre>
+      <p class="soundbite">“New behaviour as a new conformance — I don’t reopen tested code to extend it.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">L — Liskov Substitution<span class="full">SOLID</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>A subtype must be usable anywhere its supertype is, honouring the same contract. The classic break: a <code>Square</code> subclass of <code>Rectangle</code> that ties width to height violates code expecting sides to move independently.</p>
+      <p class="soundbite">“A subtype that surprises callers isn’t a subtype — it honours the contract or it doesn’t belong.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">I — Interface Segregation<span class="full">SOLID</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Many small focused protocols beat one fat one. Clients shouldn’t depend on methods they never call.</p>
+      <pre><code>protocol Readable { func read() -> Data }
+protocol Writable { func write(_ d: Data) }
+// a read-only client conforms to Readable alone</code></pre>
+      <p class="soundbite">“Small protocols mean clients depend only on what they actually use.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">D — Dependency Inversion<span class="full">SOLID</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Depend on abstractions, not concretions. High-level code shouldn’t reach for <code>URLSession</code> directly — inject a protocol. <strong>This is your testing seam.</strong></p>
+      <pre><code>protocol ListingsService { func fetch() async throws -> [Listing] }
+
+final class ViewModel {
+    private let service: ListingsService   // not URLSession
+    init(service: ListingsService) { self.service = service }
+}</code></pre>
+      <p class="soundbite">“I inject a protocol, not a concrete type — that boundary is where my test doubles plug in.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">Separation of Concerns<span class="full">design</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Distinct concerns live in distinct places: presentation, business rules, and data access don’t bleed into each other. This is what makes the clean layers possible and keeps each part independently testable.</p>
+      <p class="soundbite">“Each layer owns one concern, so I can reason about and test it in isolation.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">Clean Layers<span class="full">Data · Domain · Presentation</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <ul class="tight">
+        <li><strong>Presentation</strong> (View / ViewModel) — formats state for display, handles user intent. No business rules.</li>
+        <li><strong>Domain</strong> (use cases / entities) — pure business logic, framework-agnostic. Imports nothing UIKit/CoreData.</li>
+        <li><strong>Data</strong> (repository / data sources) — fetching, persistence, and <strong>mapping DTO → domain</strong>.</li>
+      </ul>
+      <p class="quiet">Dependencies point <em>inward</em>: Presentation and Data depend on Domain; Domain depends on nothing.</p>
+      <p class="soundbite">“The domain sits in the middle and imports nothing — UI and data both point at it.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">Seams &amp; Protocol Doubles<span class="full">testability</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>A <strong>seam</strong> is a place you can change behaviour <em>without editing the code under test</em>. Inject a protocol, then substitute a stub in tests.</p>
+      <pre><code>struct StubService: ListingsService {
+    var result: [Listing]
+    func fetch() async throws -> [Listing] { result }
+}</code></pre>
+      <p class="soundbite">“Every dependency I inject as a protocol becomes a seam — a clean place to slot a test double.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">Value vs Reference<span class="full">struct vs class</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p><strong>Structs</strong> are value types — copied on assignment, no shared mutable state, ideal for models. <strong>Classes</strong> are reference types — use when you need identity or shared mutable state (e.g. a view model). Prefer value types by default.</p>
+      <p class="soundbite">“Value types by default — copies don’t share state, so there’s less to reason about and less to break.”</p>
+    </div></details>
+
+    <details class="flip"><summary><span class="term">Composition over Inheritance<span class="full">design</span></span><span class="cue">tap to reveal</span></summary><div class="back">
+      <p>Build behaviour by composing small pieces (protocols + concrete collaborators) rather than deep class hierarchies. Composition is more flexible, avoids fragile base classes, and pairs naturally with DI.</p>
+      <p class="soundbite">“I compose small collaborators instead of inheriting — easier to swap, test, and reason about.”</p>
+    </div></details>
+
+  </div>
+</section>
+
+<section id="testing">
+  <p class="eyebrow">Day 1 · Testing</p>
+  <h2>Writing tests by hand.</h2>
+  <p class="lede">The goal isn’t coverage — it’s showing you design code with seams and assert behaviour, not internals.</p>
+
+  <h3>The shape of every test: AAA</h3>
+  <p><strong>Arrange</strong> inputs and doubles · <strong>Act</strong> by calling the thing · <strong>Assert</strong> the observable outcome. One logical assertion per test where you can; name tests so a failure reads like a sentence: <code>test_clamp_belowLowerBound_returnsLower</code>.</p>
+
+  <h3>FIRST — what good tests are</h3>
+  <ul class="tight">
+    <li><strong>Fast</strong> — milliseconds, so you run them constantly.</li>
+    <li><strong>Isolated</strong> — no shared state, any order.</li>
+    <li><strong>Repeatable</strong> — same result every run (no clock, no network).</li>
+    <li><strong>Self-validating</strong> — pass/fail, no eyeballing.</li>
+    <li><strong>Timely</strong> — written alongside the code.</li>
+  </ul>
+
+  <h3>Test doubles — say the right word</h3>
+  <ul class="tight">
+    <li><strong>Dummy</strong> — passed to satisfy a signature, never used.</li>
+    <li><strong>Stub</strong> — returns canned data (state verification).</li>
+    <li><strong>Spy</strong> — records how it was called, you inspect afterward.</li>
+    <li><strong>Mock</strong> — pre-set expectations; verifies interactions (behaviour verification).</li>
+    <li><strong>Fake</strong> — a real but simplified implementation (e.g. in-memory store).</li>
+  </ul>
+
+  <h3>Behaviour over implementation</h3>
+  <p>Assert through the public API — the <em>what</em>, not the <em>how</em>. Tests bound to private internals break on every refactor and stop being a safety net. If a test fails only because you renamed a private method, it was testing the wrong thing.</p>
+
+  <h3>XCTest essentials (the interview environment)</h3>
+  <pre><code>import XCTest
+
+final class ClampTests: XCTestCase {
+    // setUp() / tearDown() for shared fixtures; one fresh instance per test
+    func test_clamp_withinRange_returnsValue() {
+        XCTAssertEqual(clamp(5, 0, 10), 5)   // Arrange · Act · Assert
+    }
+}</code></pre>
+  <p class="quiet">Reach for: <code>XCTAssertEqual</code>, <code>XCTAssertTrue/False</code>, <code>XCTAssertNil/NotNil</code>, <code>XCTAssertThrowsError</code> / <code>XCTAssertNoThrow</code>, <code>XCTUnwrap</code> (throwing unwrap), <code>XCTAssertEqual(_,_,accuracy:)</code> for floats, <code>XCTFail</code>. Async: mark the test <code>async</code> and <code>await</code> directly, or use <code>XCTestExpectation</code> + <code>fulfillment(of:timeout:)</code> for callbacks.</p>
+
+  <div class="note"><span class="k">Worth a mention.</span> Swift Testing (Xcode 16+) is the modern alternative: <code>import Testing</code>, <code>@Test func …</code>, <code>#expect(…)</code> and <code>#require(…)</code>. If asked, note it’s the direction of travel but XCTest is still what most production suites run on.</div>
+
+  <h3>iPad-friendly drills — copy once, work there</h3>
+  <p>Coding on iPad is smoother when you’re not switching apps. So each drill below is a <strong>complete, paste-ready playground file</strong>: a tiny test harness, the type under test, and the task as comments. Tap <strong>Copy</strong>, paste into a fresh playground, write your assertions in the <code>YOUR TESTS</code> block, and run — no flipping back to this guide.</p>
+  <p class="quiet">The harness gives you two helpers to assert with: <code>expect(_ condition, _ message)</code> and <code>expectEqual(_ a, _ b, _ message)</code>. Each prints ✅/❌ as it runs, then a final tally. Reveal the solution only after you’ve had a go.</p>
+
+  <h3>Drills</h3>
+
+  <div class="card">
+    <h4>Drill 1 · Pure function</h4>
+    <p class="quiet">Test a generic <code>clamp</code> across three cases. Good warm-up for AAA.</p>
+    <div class="snippet">
+      <div class="snippet-bar"><span class="label">Paste into a new playground</span><button class="copy" data-copy>Copy</button></div>
+      <pre><code>// ── TEST HARNESS · leave at top ──
+var passed = 0, failed = 0
+func expect(_ cond: Bool, _ msg: String = "", line: UInt = #line) {
+    if cond { passed += 1; print("✅ \(msg)") }
+    else    { failed += 1; print("❌ \(msg)  (line \(line))") }
+}
+func expectEqual<T: Equatable>(_ a: T, _ b: T, _ msg: String = "") {
+    expect(a == b, msg.isEmpty ? "\(a) == \(b)" : msg)
+}
+
+// ── CODE UNDER TEST ──
+func clamp<T: Comparable>(_ v: T, _ lo: T, _ hi: T) -> T {
+    min(max(v, lo), hi)
+}
+
+// ── TASK ──
+// Write tests for clamp(), covering:
+//   • a value inside the range      → returns the value
+//   • a value below the lower bound → returns lo
+//   • a value above the upper bound → returns hi
+
+// ── YOUR TESTS ──
+
+
+// ── keep LAST ──
+print("\n\(passed) passed, \(failed) failed")</code></pre>
+    </div>
+    <details class="reveal"><summary><span class="lbl-closed">Show solution</span><span class="lbl-open">Hide solution</span></summary>
+      <pre><code>expectEqual(clamp(5, 0, 10), 5,   "within range")
+expectEqual(clamp(-3, 0, 10), 0,  "below lower bound")
+expectEqual(clamp(99, 0, 10), 10, "above upper bound")</code></pre>
+    </details>
+  </div>
+
+  <div class="card">
+    <h4>Drill 2 · DTO → Domain mapping</h4>
+    <p class="quiet">Test a failable initialiser that enforces an invariant and supplies a default.</p>
+    <div class="snippet">
+      <div class="snippet-bar"><span class="label">Paste into a new playground</span><button class="copy" data-copy>Copy</button></div>
+      <pre><code>// ── TEST HARNESS · leave at top ──
+var passed = 0, failed = 0
+func expect(_ cond: Bool, _ msg: String = "", line: UInt = #line) {
+    if cond { passed += 1; print("✅ \(msg)") }
+    else    { failed += 1; print("❌ \(msg)  (line \(line))") }
+}
+func expectEqual<T: Equatable>(_ a: T, _ b: T, _ msg: String = "") {
+    expect(a == b, msg.isEmpty ? "\(a) == \(b)" : msg)
+}
+
+// ── CODE UNDER TEST ──
+struct ListingDTO: Decodable { let id: Int; let price: Int?; let bedrooms: Int? }
+struct Listing: Equatable { let id: Int; let price: Int; let bedrooms: Int }
+
+extension Listing {
+    init?(dto: ListingDTO) {
+        guard let price = dto.price else { return nil }   // invariant: price required
+        self.init(id: dto.id, price: price, bedrooms: dto.bedrooms ?? 0)
+    }
+}
+
+// ── TASK ──
+// Write tests for init?(dto:):
+//   • a DTO with a price         → maps to a non-nil Listing
+//   • a DTO with price == nil    → returns nil
+//   • a DTO with bedrooms == nil → Listing.bedrooms defaults to 0
+// (build a DTO with e.g. ListingDTO(id: 1, price: 500_000, bedrooms: 3))
+
+// ── YOUR TESTS ──
+
+
+// ── keep LAST ──
+print("\n\(passed) passed, \(failed) failed")</code></pre>
+    </div>
+    <details class="reveal"><summary><span class="lbl-closed">Show solution</span><span class="lbl-open">Hide solution</span></summary>
+      <pre><code>expect(Listing(dto: .init(id: 1, price: 500_000, bedrooms: 3)) != nil, "valid maps")
+expect(Listing(dto: .init(id: 2, price: nil, bedrooms: 2)) == nil,     "no price rejected")
+expectEqual(Listing(dto: .init(id: 3, price: 1, bedrooms: nil))?.bedrooms, 0, "nil beds → 0")</code></pre>
+    </details>
+  </div>
+
+  <div class="card">
+    <h4>Drill 3 · View model with a stub</h4>
+    <p class="quiet">Write your own test double for an injected protocol, then assert the formatted output.</p>
+    <div class="snippet">
+      <div class="snippet-bar"><span class="label">Paste into a new playground</span><button class="copy" data-copy>Copy</button></div>
+      <pre><code>// ── TEST HARNESS · leave at top ──
+var passed = 0, failed = 0
+func expect(_ cond: Bool, _ msg: String = "", line: UInt = #line) {
+    if cond { passed += 1; print("✅ \(msg)") }
+    else    { failed += 1; print("❌ \(msg)  (line \(line))") }
+}
+func expectEqual<T: Equatable>(_ a: T, _ b: T, _ msg: String = "") {
+    expect(a == b, msg.isEmpty ? "\(a) == \(b)" : msg)
+}
+
+// ── CODE UNDER TEST ──
+extension Double {
+    var asGBP: String { "£" + String(format: "%.0f", self) }
+}
+
+protocol PriceService { func price(for id: Int) -> Int }
+
+struct PriceViewModel {
+    let service: PriceService                 // injected seam
+    func display(for id: Int) -> String { Double(service.price(for: id)).asGBP }
+}
+
+// ── TASK ──
+// 1. Write a stub conforming to PriceService that returns a fixed price.
+// 2. Inject it into PriceViewModel and assert display(for:) == "£425000".
+
+// ── YOUR TESTS ──
+
+
+// ── keep LAST ──
+print("\n\(passed) passed, \(failed) failed")</code></pre>
+    </div>
+    <details class="reveal"><summary><span class="lbl-closed">Show solution</span><span class="lbl-open">Hide solution</span></summary>
+      <pre><code>struct StubPrice: PriceService {            // the test double
+    let value: Int
+    func price(for id: Int) -> Int { value }
+}
+
+let vm = PriceViewModel(service: StubPrice(value: 425_000))
+expectEqual(vm.display(for: 1), "£425000", "formats injected price")</code></pre>
+    </details>
+  </div>
+
+  <div class="card">
+    <h4>Drill 4 · Throwing &amp; errors</h4>
+    <p class="quiet">Assert both the success path and the throwing path — runnable here with do/catch.</p>
+    <div class="snippet">
+      <div class="snippet-bar"><span class="label">Paste into a new playground</span><button class="copy" data-copy>Copy</button></div>
+      <pre><code>// ── TEST HARNESS · leave at top ──
+var passed = 0, failed = 0
+func expect(_ cond: Bool, _ msg: String = "", line: UInt = #line) {
+    if cond { passed += 1; print("✅ \(msg)") }
+    else    { failed += 1; print("❌ \(msg)  (line \(line))") }
+}
+func expectEqual<T: Equatable>(_ a: T, _ b: T, _ msg: String = "") {
+    expect(a == b, msg.isEmpty ? "\(a) == \(b)" : msg)
+}
+
+// ── CODE UNDER TEST ──
+enum ParseError: Error, Equatable { case invalid }
+func parse(_ s: String) throws -> Int {
+    guard let n = Int(s) else { throw ParseError.invalid }
+    return n
+}
+
+// ── TASK ──
+// Write tests for parse(_:):
+//   • "42"  → returns 42
+//   • "abc" → throws ParseError.invalid
+// Tip: with this harness, assert throwing using do/catch.
+
+// ── YOUR TESTS ──
+
+
+// ── keep LAST ──
+print("\n\(passed) passed, \(failed) failed")</code></pre>
+    </div>
+    <details class="reveal"><summary><span class="lbl-closed">Show solution</span><span class="lbl-open">Hide solution</span></summary>
+      <pre><code>// success path
+expectEqual(try? parse("42"), 42, "parses a valid int")
+
+// throwing path
+do {
+    _ = try parse("abc")
+    expect(false, "expected parse to throw")
+} catch {
+    expect(error as? ParseError == .invalid, "throws .invalid on bad input")
+}</code></pre>
+      <p class="quiet">In XCTest you’d write this as <code>XCTAssertThrowsError(try parse("abc")) { ... }</code> — same idea, framework sugar.</p>
+    </details>
+  </div>
+</section>
+
+<section id="arch">
+  <p class="eyebrow">Day 2 · Architecture</p>
+  <h2>Designing on a blank board.</h2>
+  <p class="lede">They’ll ask you to build a system from scratch and talk through it. Structure beats brilliance — drive the conversation with a framework.</p>
+
+  <h3>Patterns — one crisp line each</h3>
+  <ul class="tight">
+    <li><strong>MVC</strong> (Apple’s) — Model / View / Controller. Honest failure mode: the controller bloats into a “Massive View Controller”.</li>
+    <li><strong>MVVM</strong> — the view model exposes display-ready state and owns presentation logic, importing no UIKit. Bindings (Combine, closures, or SwiftUI <code>@Observable</code>) push state to the view. Highly testable.</li>
+    <li><strong>MVI</strong> — a single immutable <code>State</code>; user <code>Intent</code>s flow through a reducer to produce the next state. Unidirectional and predictable; more ceremony.</li>
+    <li><strong>Also name-drop:</strong> Clean Architecture / use-case layering, VIPER, TCA — know they exist and their trade-offs (structure vs boilerplate).</li>
+  </ul>
+
+  <h3>The 4D model — your spine for the session</h3>
+  <ol>
+    <li><strong>Define requirements.</strong> Ask before drawing: functional needs, and constraints — offline support? min iOS version? auth? real-time?</li>
+    <li><strong>Design high-level.</strong> Lay the clean layers: UI/Presentation → Domain → Data, plus external services. Dependencies point inward.</li>
+    <li><strong>Dive into components.</strong> Go deep where it matters (below).</li>
+    <li><strong>Discuss trade-offs.</strong> There’s no perfect design — justify the path you chose against the one you didn’t.</li>
+  </ol>
+
+  <h3>Key components to go deep on</h3>
+  <ul class="tight">
+    <li><strong>State management</strong> — single source of truth, unidirectional flow; model loading/loaded/empty/error as an enum.</li>
+    <li><strong>Persistence</strong> — Core Data / SwiftData / SQLite / files; Keychain for secrets. Talk cache invalidation and what must survive process death.</li>
+    <li><strong>Concurrency</strong> — async/await, <code>Task</code>, <code>actor</code> for data isolation, <code>@MainActor</code> for UI, <code>Sendable</code>. Never block the main thread.</li>
+    <li><strong>Dependency injection</strong> — constructor injection of protocols; a composition root wires concrete types. Decoupled = testable.</li>
+    <li><strong>Lifecycle</strong> — backgrounding, process death, state restoration, scene lifecycle.</li>
+    <li><strong>Observability</strong> — <code>os.Logger</code>, crash reporting (Crashlytics/Sentry), MetricKit, analytics.</li>
+    <li><strong>Image handling</strong> — async load, <code>NSCache</code>, downsample to the display size, cancel on cell reuse.</li>
+  </ul>
+
+  <h3>Trade-off prompts to have ready</h3>
+  <ul class="tight">
+    <li>MVVM vs MVI — testability/simplicity vs strict predictability.</li>
+    <li>Local DB vs in-memory cache — persistence/offline vs speed/simplicity.</li>
+    <li>Core Data vs SwiftData — maturity/control vs modern ergonomics.</li>
+    <li>Reactive (Combine) vs imperative — composability vs cognitive load.</li>
+  </ul>
+
+  <div class="note"><span class="k">Cross-cutting, always raise them.</span> Performance · Security (HTTPS, no secrets in source, Keychain) · Resilience (retry, offline cache, empty/error states) · Testing (which seams you’d unit-test) · Accessibility (Dynamic Type, VoiceOver labels, contrast, tap targets).</div>
+</section>
+
+<section id="coding">
+  <p class="eyebrow">Day 2 · Live coding playbook</p>
+  <h2>Pairing, not performing.</h2>
+  <p class="lede">A collaborative pair-programming session over a starter project: a local JSON file standing in for an API, plus basic UI. Process beats completion.</p>
+
+  <h3>First five minutes — earn the rest</h3>
+  <ol>
+    <li>Read the brief. Run the app. Skim the starter code structure.</li>
+    <li><strong>Ask clarifying questions and restate the requirements back.</strong> Confirm scope and priorities.</li>
+    <li>State your plan aloud before typing: “I’ll model the domain, define a protocol for the data source, map the JSON into it, then drive the UI from a view model.”</li>
+  </ol>
+
+  <h3>Narrate the whole way</h3>
+  <p>Verbalise decisions and trade-offs as you go — that’s what they’re scoring. “I’m making this a value type because… I’ll inject this as a protocol so it’s testable… I’ll keep this simple for now and note where I’d extend it.”</p>
+
+  <h3>A reliable structure</h3>
+  <ul class="tight">
+    <li>Define a <strong>domain model</strong> for the problem space (strict, non-optional invariants).</li>
+    <li>Define a <strong>protocol</strong> for the data source — your seam.</li>
+    <li><strong>Map DTO → domain</strong> safely with <code>Codable</code>; keep the DTO separate from the domain entity and handle missing/optional keys deliberately.</li>
+    <li>Drive the <strong>presentation</strong> from a view model exposing display-ready state.</li>
+    <li>Write <strong>one early test</strong> to prove the seam exists and you think test-first.</li>
+  </ul>
+  <pre><code>struct ListingDTO: Decodable { let id: Int; let price: Int?; let bedrooms: Int? }
+struct Listing: Equatable { let id: Int; let price: Int; let bedrooms: Int }
+
+protocol ListingsRepository {           // seam
+    func load() async throws -> [Listing]
+}</code></pre>
+
+  <div class="warn"><strong>Don’t gold-plate.</strong> You won’t be asked to implement networking, persistence, or complex framework features. Mention where they’d go, then spend your time on structure, modelling, and tests. And no AI assistants — autocomplete and docs only.</div>
+</section>
+
+<section id="design">
+  <p class="eyebrow">Day 2 · Worked example</p>
+  <h2>System design: a property-listings feed.</h2>
+  <p class="lede">Rehearse this aloud end-to-end. It maps almost directly onto anything Rightmove-shaped they might hand you.</p>
+
+  <h3>1 · Define requirements <span class="quiet">(ask, don’t assume)</span></h3>
+  <ul class="tight">
+    <li><strong>Functional:</strong> search by area; scrollable results with photo, price, beds; pagination / infinite scroll; tap → detail; save favourites.</li>
+    <li><strong>Non-functional:</strong> smooth scrolling, fast image loading, graceful on poor networks, accessible, defined min iOS version.</li>
+    <li><strong>Clarify:</strong> offline support needed? auth? real-time updates? how fresh must results be?</li>
+  </ul>
+
+  <h3>2 · Design high-level</h3>
+  <pre><code>Presentation   SearchView ─ FeedViewModel  (loading/loaded/empty/error)
+     │
+Domain         SearchListings · ToggleFavourite   (pure use cases)
+     │
+Data           ListingsRepository
+                 ├─ RemoteListingsSource  (paginated API, Codable DTOs)
+                 └─ LocalCache            (favourites + last page)
+ImageLoader    async fetch · NSCache · downsample · cancel-on-reuse</code></pre>
+
+  <h3>3 · Dive into components</h3>
+  <ul class="tight">
+    <li><strong>State:</strong> one enum drives the screen — <code>.loading / .loaded([Listing]) / .empty / .error</code> — plus a pagination cursor.</li>
+    <li><strong>Persistence:</strong> favourites must survive process death → Core Data/SwiftData; cache the last page for instant cold-start. Define invalidation.</li>
+    <li><strong>Concurrency:</strong> <code>async</code> fetch off-main; <code>@MainActor</code> view model publishes state; prefetch upcoming images; cancel in-flight loads on cell reuse.</li>
+    <li><strong>Images:</strong> async load → <code>NSCache</code> → downsample to cell size (avoid decoding full-res) → placeholder → cancellation.</li>
+    <li><strong>Networking:</strong> paginated endpoint, <code>Codable</code> DTOs mapped to domain in the repo, typed errors, bounded retry.</li>
+  </ul>
+
+  <h3>4 · Discuss trade-offs</h3>
+  <ul class="tight">
+    <li>Core Data vs SwiftData vs a lightweight cache — control/maturity vs modern ergonomics, for the favourites store.</li>
+    <li>Infinite scroll vs explicit paging — UX smoothness vs data usage and predictability.</li>
+    <li>Aggressive image prefetch vs bandwidth on cellular.</li>
+    <li>MVVM vs MVI for the feed — simpler bindings vs strict, debuggable state flow.</li>
+  </ul>
+
+  <div class="note"><span class="k">Land the cross-cutting points.</span> Accessibility: Dynamic Type, VoiceOver labels (“£425,000, 3 bedrooms, Edinburgh”), contrast, large tap targets. Security: HTTPS, tokens in Keychain, no secrets in source. Resilience: empty + error states, retry, offline cache. Testing: view-model unit tests with a stubbed repository; snapshot tests for the cell.</div>
+</section>
+
+<section id="quiz">
+  <p class="eyebrow">Either day · Cold recall</p>
+  <h2>Self-quiz.</h2>
+  <p class="lede">Answer out loud first, then reveal. The ones you fumble are your revision list.</p>
+
+  <div class="q"><div class="qtext"><span class="num">01</span>What does the <strong>D</strong> in SOLID stand for, and why does it matter for testing?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Dependency Inversion — depend on protocols, not concrete types. That boundary is the seam where you inject test doubles.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">02</span>Difference between a <strong>stub</strong> and a <strong>mock</strong>?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">A stub returns canned data (state). A mock also has pre-set expectations and verifies how it was called (behaviour/interaction).</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">03</span>When should you <em>not</em> apply DRY?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">When the duplication is incidental. Forcing an abstraction over coincidentally-similar code couples things that should change independently. Rule of three.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">04</span>In clean layers, <strong>where</strong> do you map DTOs to domain models?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">In the Data layer (repository / data source), so the Domain stays framework-agnostic and never sees transport details.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">05</span>What keeps the UI responsive during a network call?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Do the work off the main thread (async/await, Task), then hop back to @MainActor only to publish the resulting state.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">06</span>Spell out <strong>AAA</strong>.</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Arrange, Act, Assert — set up inputs and doubles, run the thing, assert the observable outcome.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">07</span>MVVM vs MVI, one line each.</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">MVVM — the view model exposes display-ready state; bindings update the view. MVI — a single immutable state; intents go through a reducer to produce the next state, strictly unidirectional.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">08</span>Why prefer value types for models?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Copied on assignment → no shared mutable state → fewer aliasing bugs and easier-to-reason, easier-to-test code.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">09</span>What’s the <em>first</em> thing to do in both sessions?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Clarify requirements. Ask questions, restate them back, agree on scope before writing anything. (Ron’s #1 piece of feedback.)</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">10</span>Define a “seam”.</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">A place you can change behaviour without editing the code under test — e.g. an injected protocol you swap for a double.</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">11</span>Name the five test-double types.</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Dummy (passed, unused), Stub (canned data), Spy (records calls), Mock (expectations + verifies), Fake (working but simplified, e.g. in-memory store).</div></details></div>
+
+  <div class="q"><div class="qtext"><span class="num">12</span>Behaviour vs implementation — what should a test assert?</div>
+    <details class="reveal"><summary><span class="lbl-closed">Reveal answer</span><span class="lbl-open">Hide answer</span></summary><div class="ans">Observable behaviour through the public API, not private internals. Keeps tests green through refactors.</div></details></div>
+</section>
+
+<section id="dayof">
+  <p class="eyebrow">Tuesday · 30-minute refresher</p>
+  <h2>Day of.</h2>
+  <div class="mantra">“Clarify before you build.<br>Narrate every decision.”</div>
+
+  <h3>Eight cards to skim</h3>
+  <ul class="tight">
+    <li><strong>DIP</strong> — inject protocols, not concretions; that’s your test seam.</li>
+    <li><strong>Clean layers</strong> — Presentation → Domain ← Data; domain imports nothing.</li>
+    <li><strong>DTO → domain</strong> maps in the Data layer, with strict invariants.</li>
+    <li><strong>AAA</strong> + behaviour over implementation.</li>
+    <li><strong>Stub</strong> = canned data; <strong>mock</strong> = verifies interactions.</li>
+    <li><strong>Concurrency</strong> — off-main work, <code>@MainActor</code> to publish.</li>
+    <li><strong>4D</strong> — Define · Design · Dive · Discuss.</li>
+    <li><strong>Value types</strong> by default; <code>guard</code> early; keep it KISS.</li>
+  </ul>
+
+  <h3>Before you join — setup</h3>
+  <ul class="check">
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Xcode open, recent version<small>Confirm it builds to a simulator without prompts</small></span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Pick a simulator and pre-warm it<small>Cold-booting mid-interview wastes minutes</small></span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Test MS Teams + screen share<small>Grant screen-recording permission ahead of time (System Settings → Privacy)</small></span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">GitHub ready — github.com/mouseorcleg<small>Be logged in so you can accept the repo invite instantly</small></span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Miro logged in, basics rehearsed<small>Sticky note, shape, arrow, text — that’s all you need</small></span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Quiet space, water, charger<small>2.5 hours; remove interruptions</small></span></label></li>
+  </ul>
+
+  <h3>When the invite lands (20–60 min before)</h3>
+  <ul class="check">
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Repo invite arrives — watch GitHub + email</span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Clone the repo</span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Build &amp; run in the simulator<small>Confirm it compiles before you join — surface issues early</small></span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Open the Miro board link they send</span></label></li>
+    <li><label><input type="checkbox"><span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#FBF9F4" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></span><span class="lbl">Join the call a couple of minutes early</span></label></li>
+  </ul>
+
+  <div class="note"><span class="k">If you get stuck.</span> Say what you’re thinking, name the options, pick one and explain why. Accepting a hint gracefully is itself an assessed skill — treat their input as collaboration, not correction.</div>
+</section>
+
+</main>
+
+<footer>Tap a concept to reveal it · tick the checklists on the day · works fully offline.<br>Made for Masha — clarify first, narrate always.</footer>
+
+<script>
+/* Progressive enhancement: runs in a real browser engine (Documents by Readdle).
+   If it doesn't run (Quick Look), the static guide above is fully usable. */
+(function(){
+  var store={
+    get:function(k,d){try{var v=localStorage.getItem(k);return v==null?d:JSON.parse(v);}catch(e){return d;}},
+    set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+  };
+
+  // progress bar, injected under the nav
+  var nav=document.querySelector('nav.tabs');
+  if(nav){
+    var prog=document.createElement('div'); prog.className='prog';
+    prog.innerHTML='<div class="prog-track"><div class="prog-fill" id="pf"></div></div><div class="prog-label" id="pl"></div>';
+    nav.parentNode.insertBefore(prog, nav.nextSibling);
+  }
+  var pf=document.getElementById('pf'), pl=document.getElementById('pl');
+
+  var flips=[].slice.call(document.querySelectorAll('details.flip'));
+  var mastered=new Set(store.get('mastered',[]));
+  function update(){
+    if(!pf) return;
+    var done=0; flips.forEach(function(f,i){ if(mastered.has(i)) done++; });
+    var pct=flips.length?Math.round(done/flips.length*100):0;
+    pf.style.width=pct+'%';
+    pl.textContent=done+' of '+flips.length+' concepts locked in';
+  }
+
+  flips.forEach(function(f,i){
+    var back=f.querySelector('.back'); if(!back) return;
+    var wrap=document.createElement('div'); wrap.className='got';
+    var btn=document.createElement('button');
+    function render(){ var on=mastered.has(i); f.classList.toggle('mastered',on); btn.textContent=on?'\u2713 Got it':'Mark \u201cGot it\u201d'; }
+    btn.addEventListener('click',function(e){
+      e.preventDefault(); e.stopPropagation();
+      if(mastered.has(i)){mastered.delete(i);}else{mastered.add(i);}
+      store.set('mastered',Array.from(mastered)); render(); update();
+    });
+    wrap.appendChild(btn); back.appendChild(wrap); render();
+  });
+  update();
+
+  // checklist persistence
+  var boxes=[].slice.call(document.querySelectorAll('.check input'));
+  var checks=new Set(store.get('checks',[]));
+  boxes.forEach(function(b,i){
+    if(checks.has(i)) b.checked=true;
+    b.addEventListener('change',function(){
+      if(b.checked){checks.add(i);}else{checks.delete(i);}
+      store.set('checks',Array.from(checks));
+    });
+  });
+
+  // copy-to-clipboard for drill snippets
+  function fallbackCopy(text){
+    var ta=document.createElement('textarea');
+    ta.value=text; ta.setAttribute('readonly','');
+    ta.style.position='fixed'; ta.style.top='0'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    try{ document.execCommand('copy'); }catch(e){}
+    document.body.removeChild(ta);
+  }
+  function copyText(text){
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text)['catch'](function(){ fallbackCopy(text); });
+    } else { fallbackCopy(text); }
+  }
+  [].slice.call(document.querySelectorAll('.copy[data-copy]')).forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var snip=btn.closest('.snippet');
+      var code=snip && snip.querySelector('code');
+      if(!code) return;
+      copyText(code.textContent);
+      var prev=btn.textContent;
+      btn.textContent='Copied ✓'; btn.classList.add('done');
+      setTimeout(function(){ btn.textContent=prev; btn.classList.remove('done'); },1600);
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
