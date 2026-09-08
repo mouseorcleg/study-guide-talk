@@ -40,7 +40,7 @@ Update the guide
 
 Just in case:
 
-P.S.: Take a learning time quiz during coffee break!
+P.S.: Take a learning style quiz during coffee break!
 
 <img width="352" alt="link to https://www.learningstylequiz.com" src="https://github.com/user-attachments/assets/1460d4ce-7d27-40ba-ac8e-f7ad796c907d" />
 
