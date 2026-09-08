@@ -7,7 +7,7 @@ This talk is about using Claude to build a study guide that fits you.
 - your subject;
 - your constraints.
 
-#### Initial prompt in plan mode:
+#### Initial prompt:
 ```
 // What
 I want to create an interactive study guide for my interview prep. 
