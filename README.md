@@ -3,7 +3,7 @@ Most study advice assumes you learn like everyone else, with time you don't have
 This talk is about using Claude to build a study guide that fits you.
 
 ### What you need to know beforehand
-- your study preferences;
+- your [learning style](https://www.educationplanner.org/students/self-assessments/learning-styles);
 - your subject;
 - your constraints.
 
